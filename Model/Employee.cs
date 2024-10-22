@@ -17,6 +17,8 @@ public class Employee
     public DateTime ShiftEnd { get; set; }
     public StatusEmpl Status { get; set; }
 
+    public Branch Branch { get; set; }
+
     protected Employee(string name, string role, double salary, DateTime hireDate, DateTime shiftStart,
         DateTime shiftEnd, StatusEmpl status, DateTime? layoffDate = null)
     {
