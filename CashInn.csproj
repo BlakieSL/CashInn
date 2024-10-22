@@ -11,7 +11,6 @@
       <Folder Include="Dto\Request\" />
       <Folder Include="Dto\Response\" />
       <Folder Include="Mapper\" />
-      <Folder Include="Model\" />
       <Folder Include="Service\Declaration\" />
       <Folder Include="Service\Implementation\" />
       <Folder Include="Validation\" />
