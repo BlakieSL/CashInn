@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Controller\" />
+      <Folder Include="Dto\Request\" />
+      <Folder Include="Dto\Response\" />
+      <Folder Include="Mapper\" />
+      <Folder Include="Model\" />
+      <Folder Include="Service\Declaration\" />
+      <Folder Include="Service\Implementation\" />
+      <Folder Include="Validation\" />
+    </ItemGroup>
+
+</Project>
