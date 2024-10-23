@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Text.Json.Serialization;
 using CashInn.Helper;
 
 namespace CashInn.Model;
@@ -8,14 +8,50 @@ public class Branch
     private static readonly ICollection<Branch> Branches = new List<Branch>();
     
     public int Id { get; set; }
-    public string Location { get; set; }
-    public string ContactInfo { get; set; }
-    public Employee Manager { get; set; }
-    public ICollection<Employee> Employees { get; set; }
-    public Menu Menu { get; set; }
+    public string Location
+    {
+        get => _location;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Location cannot be null or empty", nameof(Location));
+            _location = value;
+        }
+    }
+    private string _location;
+    public string ContactInfo
+    {
+        get => _contactInfo;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Contact info cannot be null or empty");
+            _contactInfo = value;
+        }
+    }
+    private string _contactInfo;
     
-    public Branch(int id, string location, string contactInfo, Employee manager,
-        ICollection<Employee> employees, Menu menu)
+    [JsonIgnore]
+    public Employee? Manager { get; set; }
+    [JsonIgnore]
+    public ICollection<Employee> Employees { get; set; }
+    [JsonIgnore]
+    public Menu Menu { get; set; }
+
+    public Branch()
+    {
+        
+    }
+
+    public Branch(int id, string location, string contactInfo)
+    {
+        Id = id;
+        Location = location;
+        ContactInfo = contactInfo;
+    }
+    
+    public Branch(int id, string location, string contactInfo, ICollection<Employee> employees, 
+        Menu menu, Employee? manager = null)
     {
         Id = id;
         Location = location;
@@ -35,13 +71,11 @@ public class Branch
     {
         var deserializedBranches = Saver.Deserialize<List<Branch>>(filePath);
         Branches.Clear();
-        
-        if (deserializedBranches != null)
+
+        if (deserializedBranches == null) return;
+        foreach (var branch in deserializedBranches)
         {
-            foreach (var branch in deserializedBranches)
-            {
-                Branches.Add(branch);
-            }
+            Branches.Add(branch);
         }
     }
 

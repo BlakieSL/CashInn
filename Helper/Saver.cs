@@ -11,6 +11,7 @@ public class Saver
         {
             WriteIndented = true,
             Converters = { new JsonStringEnumConverter() } 
+            
         };
 
         string jsonString = JsonSerializer.Serialize(obj, options);

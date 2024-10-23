@@ -11,8 +11,9 @@ public class FlexibleEmpl : Employee, IDeliveryEmpl, IWaiterEmpl
     public double TipsEarned { get; set; }
 
     public FlexibleEmpl(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
-        StatusEmpl status, Branch branch,  string vehicle, string deliveryArea, DateTime? layoffDate = null)
-        : base(id, name, "Flexible Employee", salary, hireDate, shiftStart, shiftEnd, status, branch, layoffDate)
+        StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea,
+        DateTime? layoffDate = null)
+        : base(id, name, "Flexible Employee", salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
     {
         Vehicle = vehicle;
         DeliveryArea = deliveryArea;

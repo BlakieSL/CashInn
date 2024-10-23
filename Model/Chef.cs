@@ -9,8 +9,9 @@ public class Chef : Employee
     public List<Cook> ManagedCooks { get; set; }
     
     public Chef(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
-        StatusEmpl status, Branch branch,  string specialtyCuisine, int experienceLevel, DateTime? layoffDate = null)
-        : base(id, name, "Chef", salary, hireDate, shiftStart, shiftEnd, status, branch, layoffDate)
+        StatusEmpl status, bool isBranchManager, string specialtyCuisine, int experienceLevel,
+        DateTime? layoffDate = null)
+        : base(id, name, "Chef", salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
     {
         SpecialtyCuisine = specialtyCuisine;
         ExperienceLevel = experienceLevel;

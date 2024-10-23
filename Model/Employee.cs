@@ -20,7 +20,6 @@ public class Employee
         }
     }
     private string _name;
-
     public string Role
     {
         get => _role;
@@ -32,14 +31,14 @@ public class Employee
         }
     }
     private string _role;
-
     public double Salary { get; set; }
     public DateTime HireDate { get; set; }
     public DateTime? LayoffDate { get; set; }
     public DateTime ShiftStart { get; set; }
     public DateTime ShiftEnd { get; set; }
     public StatusEmpl Status { get; set; }
-
+    public bool IsBranchManager { get; set; }
+    [JsonIgnore]
     public Branch Branch { get; set; }
 
     public Employee()
@@ -48,7 +47,7 @@ public class Employee
     }   
     
     protected Employee(int id, string name, string role, double salary, DateTime hireDate, DateTime shiftStart,
-        DateTime shiftEnd, StatusEmpl status, Branch branch, DateTime? layoffDate = null)
+        DateTime shiftEnd, StatusEmpl status, bool isBranchManager, DateTime? layoffDate = null)
     {
         Id = id;
         Name = name;
@@ -59,7 +58,7 @@ public class Employee
         ShiftEnd = shiftEnd;
         Status = status;
         LayoffDate = layoffDate;
-        Branch = branch;
+        IsBranchManager = isBranchManager;
     }
     
     public static void SaveExtent(string filepath)
@@ -71,11 +70,12 @@ public class Employee
     {
         var deserializedEmployees = Saver.Deserialize<List<Employee>>(filepath);
         Employees.Clear();
-        if (deserializedEmployees != null)
-            foreach (var employee in deserializedEmployees)
-            {
-                Employees.Add(employee);
-            }
+        
+        if (deserializedEmployees == null) return;
+        foreach (var employee in deserializedEmployees)
+        {
+            Employees.Add(employee);
+        }
     }
     
     public static void SaveEmployee(Employee employee)

@@ -1,0 +1,12 @@
+[
+  {
+    "Id": 1,
+    "Location": "123 Main St",
+    "ContactInfo": "contact@example.com"
+  },
+  {
+    "Id": 1,
+    "Location": "123 Main St",
+    "ContactInfo": "contact@example.com"
+  }
+]

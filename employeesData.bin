@@ -1,0 +1,38 @@
+[
+  {
+    "Id": 3,
+    "Name": "John Doe",
+    "Role": "Cook",
+    "Salary": 32000,
+    "HireDate": "2023-10-23T21:06:31.8383889+02:00",
+    "LayoffDate": null,
+    "ShiftStart": "2024-10-23T21:06:31.8383937+02:00",
+    "ShiftEnd": "2024-10-24T05:06:31.8383941+02:00",
+    "Status": "FullTime",
+    "IsBranchManager": false
+  },
+  {
+    "Id": 3,
+    "Name": "John Doe",
+    "Role": "Cook",
+    "Salary": 32000,
+    "HireDate": "2023-10-23T21:14:46.5433234+02:00",
+    "LayoffDate": null,
+    "ShiftStart": "2024-10-23T21:14:46.5433292+02:00",
+    "ShiftEnd": "2024-10-24T05:14:46.5433302+02:00",
+    "Status": "FullTime",
+    "IsBranchManager": false
+  },
+  {
+    "Id": 3,
+    "Name": "John Doe",
+    "Role": "Cook",
+    "Salary": 32000,
+    "HireDate": "2023-10-23T21:15:34.6101224+02:00",
+    "LayoffDate": null,
+    "ShiftStart": "2024-10-23T21:15:34.6101281+02:00",
+    "ShiftEnd": "2024-10-24T05:15:34.6101283+02:00",
+    "Status": "FullTime",
+    "IsBranchManager": false
+  }
+]
