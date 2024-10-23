@@ -7,9 +7,9 @@ public class Waiter : Employee, IWaiterEmpl
 { 
     public double TipsEarned { get; set; }
     
-    public Waiter(string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
+    public Waiter(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
         StatusEmpl status, double tipsEarned, DateTime? layoffDate = null)
-        : base(name, "Chef", salary, hireDate, shiftStart, shiftEnd, status, layoffDate)
+        : base(id, name, "Chef", salary, hireDate, shiftStart, shiftEnd, status, layoffDate)
     {
         TipsEarned = tipsEarned;
     }

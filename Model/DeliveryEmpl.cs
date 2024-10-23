@@ -9,10 +9,10 @@ public class DeliveryEmpl : Employee, IDeliveryEmpl
     public string DeliveryArea { get; set; }
 
 
-    public DeliveryEmpl(string name, string role, double salary, DateTime hireDate, 
+    public DeliveryEmpl(int id, string name, string role, double salary, DateTime hireDate, 
         DateTime shiftStart, DateTime shiftEnd, StatusEmpl status, string vehicle, 
         string deliveryArea, DateTime? layoffDate = null)
-        : base(name, "DeliveryEmpl", salary, hireDate, shiftStart, shiftEnd, status, layoffDate)
+        : base(id, name, "DeliveryEmpl", salary, hireDate, shiftStart, shiftEnd, status, layoffDate)
     {
         Vehicle = vehicle;
         DeliveryArea = deliveryArea;

@@ -1,13 +1,14 @@
-﻿using CashInn.Enum;
+﻿using System.Text.Json.Serialization;
+using CashInn.Enum;
+using CashInn.Helper;
 
 namespace CashInn.Model;
 
 public class Employee
 {
-    private static readonly List<Employee> Employees = new List<Employee>();
-    private static int _idCounter = 1;
+    private static readonly ICollection<Employee> Employees = new List<Employee>();
     
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Role { get; set; }
     public double Salary { get; set; }
@@ -19,10 +20,15 @@ public class Employee
 
     public Branch Branch { get; set; }
 
-    protected Employee(string name, string role, double salary, DateTime hireDate, DateTime shiftStart,
+    public Employee()
+    {
+        
+    }   
+    
+    protected Employee(int id, string name, string role, double salary, DateTime hireDate, DateTime shiftStart,
         DateTime shiftEnd, StatusEmpl status, DateTime? layoffDate = null)
     {
-        Id = _idCounter++;
+        Id = id;
         Name = name;
         Role = role;
         Salary = salary;
@@ -31,13 +37,30 @@ public class Employee
         ShiftEnd = shiftEnd;
         Status = status;
         LayoffDate = layoffDate;
-        
-        Employees.Add(this);
-    }
-
-    public static List<Employee> GetAllEmployees()
-    {
-        return [..Employees];
     }
     
+    public static void SaveExtent(string filepath)
+    {
+        Saver.Serialize(Employees, filepath);
+    }
+
+    public static void LoadExtent(string filepath)
+    {
+        var deserializedEmployees = Saver.Deserialize<List<Employee>>(filepath);
+        Employees.Clear();
+        foreach (var employee in deserializedEmployees)
+        {
+            Employees.Add(employee);
+        }
+    }
+    
+    public static void SaveEmployee(Employee employee)
+    {
+        Employees.Add(employee);
+    }
+    
+    public static ICollection<Employee> GetAllEmployees()
+    {
+        return Employees.ToList();
+    }
 }
