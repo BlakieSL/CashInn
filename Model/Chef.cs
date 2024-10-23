@@ -5,7 +5,18 @@ namespace CashInn.Model;
 public class Chef : Employee
 {
     public string SpecialtyCuisine { get; set; }
-    public int ExperienceLevel { get; set; }
+
+    private int _experienceLevel;
+    public int ExperienceLevel
+    {
+        get => _experienceLevel;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("Experience level cannot be negative", nameof(ExperienceLevel));
+            _experienceLevel = value;
+        }
+    }
     public List<Cook> ManagedCooks { get; set; }
     
     public Chef(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,

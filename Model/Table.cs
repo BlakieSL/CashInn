@@ -7,7 +7,18 @@ public class Table
     private static readonly ICollection<Table> Tables = new List<Table>();
     
     public int Id { get; set; }
-    public int Capacity { get; set; }
+
+    private int _capacity;
+    public int Capacity
+    {
+        get => _capacity;
+        set
+        {
+            if (value <= 0)
+                throw new ArgumentException("Capacity must be greater than zero", nameof(Capacity));
+            _capacity = value;
+        }
+    }
 
     public Table()
     {

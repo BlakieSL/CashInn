@@ -7,6 +7,8 @@ public class MenuItem
 {
     private static readonly ICollection<MenuItem> MenuItems = new List<MenuItem>();
     public int Id { get; set; }
+
+    private string _name;
     public string Name
     {
         get => _name;
@@ -17,8 +19,20 @@ public class MenuItem
             _name = value;
         }
     }
-    private string _name;
-    public double Price { get; set; }
+
+    private double _price;
+    public double Price
+    {
+        get => _price;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("Price cannot be negative", nameof(Price));
+            _price = value;
+        }
+    }
+
+    private string _description;
     public string Description
     {
         get => _description;
@@ -29,27 +43,24 @@ public class MenuItem
             _description = value;
         }
     }
-    private string _description;
+
+    private string _dietaryInformation;
     public string DietaryInformation
     {
         get => _dietaryInformation;
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("DietaryInformation", nameof(DietaryInformation));
+                throw new ArgumentException("Dietary information cannot be null or empty", nameof(DietaryInformation));
             _dietaryInformation = value;
         }
     }
-    private string _dietaryInformation;
-    
+
     public bool Available { get; set; }
+    
     [JsonIgnore]
     public ICollection<Menu> Menus;
-
-    public MenuItem()
-    {
-        
-    }
+    public MenuItem() {}
 
     public MenuItem(int id, string name, double price, string description, string dietaryInformation, bool available)
     {

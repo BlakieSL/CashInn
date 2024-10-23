@@ -5,8 +5,17 @@ namespace CashInn.Model;
 
 public class Waiter : Employee, IWaiterEmpl
 { 
-    public double TipsEarned { get; set; }
-    
+    private double _tipsEarned;
+    public double TipsEarned
+    {
+        get => _tipsEarned;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("Tips earned cannot be negative", nameof(TipsEarned));
+            _tipsEarned = value;
+        }
+    }
     public Waiter(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, 
         DateTime shiftEnd, StatusEmpl status, bool isBranchManager,  double tipsEarned,
         DateTime? layoffDate = null)

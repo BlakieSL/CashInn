@@ -6,8 +6,9 @@ namespace CashInn.Model;
 public class Branch
 {
     private static readonly ICollection<Branch> Branches = new List<Branch>();
-    
     public int Id { get; set; }
+    
+    private string _location;
     public string Location
     {
         get => _location;
@@ -18,18 +19,18 @@ public class Branch
             _location = value;
         }
     }
-    private string _location;
+
+    private string _contactInfo;
     public string ContactInfo
     {
         get => _contactInfo;
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Contact info cannot be null or empty");
+                throw new ArgumentException("Contact info cannot be null or empty", nameof(ContactInfo));
             _contactInfo = value;
         }
     }
-    private string _contactInfo;
     
     [JsonIgnore]
     public Employee? Manager { get; set; }

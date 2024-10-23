@@ -7,7 +7,18 @@ public class Menu
 {
     private static readonly ICollection<Menu> Menus = new List<Menu>();
     public int Id { get; set; }
-    public DateTime DateUpdated { get; set; }
+
+    private DateTime _dateUpdated;
+    public DateTime DateUpdated
+    {
+        get => _dateUpdated;
+        set
+        {
+            if (value > DateTime.Now)
+                throw new ArgumentException("DateUpdated cannot be in the future", nameof(DateUpdated));
+            _dateUpdated = value;
+        }
+    }
     [JsonIgnore]
     public ICollection<string> Categories { get; set; }
     [JsonIgnore]

@@ -7,7 +7,6 @@ namespace CashInn.Model;
 public class Employee
 {
     private static readonly ICollection<Employee> Employees = new List<Employee>();
-    
     public int Id { get; set; }
     public string Name
     {
@@ -31,20 +30,72 @@ public class Employee
         }
     }
     private string _role;
-    public double Salary { get; set; }
-    public DateTime HireDate { get; set; }
-    public DateTime? LayoffDate { get; set; }
-    public DateTime ShiftStart { get; set; }
-    public DateTime ShiftEnd { get; set; }
+    public double _salary { get; set; }
+    public double Salary
+    {
+        get => _salary;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentException("Salary cannot be negative", nameof(Salary));
+            _salary = value;
+        }
+    }
+    public DateTime _hireDate { get; set; }
+    public DateTime HireDate
+    {
+        get => _hireDate;
+        set
+        {
+            if (value > DateTime.Now)
+                throw new ArgumentException("Hire date cannot be in the future", nameof(HireDate));
+            _hireDate = value;
+        }
+    }
+    public DateTime? LayoffDate
+    {
+        get => _layoffDate;
+        set
+        {
+            if (value.HasValue && value.Value < HireDate)
+                throw new ArgumentException("Layoff date cannot be before hire date", nameof(LayoffDate));
+            _layoffDate = value;
+        }
+    }
+    private DateTime? _layoffDate;
+
+    private DateTime _shiftStart;
+    public DateTime ShiftStart
+    {
+        get => _shiftStart;
+        set
+        {
+            if (value > ShiftEnd)
+                throw new ArgumentException("Shift start time cannot be after shift end time", nameof(ShiftStart));
+            _shiftStart = value;
+        }
+    }
+
+    private DateTime _shiftEnd;
+    public DateTime ShiftEnd
+    {
+        get => _shiftEnd;
+        set
+        {
+            if (value < ShiftStart)
+                throw new ArgumentException("Shift end time cannot be before shift start time", nameof(ShiftEnd));
+            _shiftEnd = value;
+        }
+    }
+
     public StatusEmpl Status { get; set; }
+
     public bool IsBranchManager { get; set; }
+
     [JsonIgnore]
     public Branch Branch { get; set; }
 
-    public Employee()
-    {
-        
-    }   
+    public Employee() {}   
     
     protected Employee(int id, string name, string role, double salary, DateTime hireDate, DateTime shiftStart,
         DateTime shiftEnd, StatusEmpl status, bool isBranchManager, DateTime? layoffDate = null)
