@@ -6,13 +6,13 @@ var app = builder.Build();
 
 app.MapGet("/create-branch-with-cook", () =>
 {
-    var employees = new List<Employee>();
+    var employees = new List<AbstractEmployee>();
     var menu = new Menu();
     
     var branch = new Branch(1, "123 Main St", "contact@example.com", employees, menu);
     
-    var cook = new Cook(2, "Mike Johnson", "Cook", 35000, DateTime.Now.AddYears(-3), DateTime.Now, DateTime.Now.AddHours(8), 
-                        StatusEmpl.FullTime, false);
+    var cook = new Cook(2, "Mike Johnson", 35000, DateTime.Now.AddYears(-3), DateTime.Now, DateTime.Now.AddHours(8), 
+                        StatusEmpl.FullTime, false, "mexican", 3, "grill");
     
     branch.Employees.Add(cook);
     Branch.SaveBranch(branch);
@@ -50,18 +50,26 @@ app.MapGet("/branches", () =>
 
 app.MapGet("/create-cook", () =>
 {
-    var branch = Branch.GetAllBranches().FirstOrDefault(); // Assuming you have at least one branch
-
-    if (branch == null)
-    {
-        return "No branches available. Create a branch first!";
-    }
-
-    var cook = new Cook(3, "John Doe", "Cook", 32000, DateTime.Now.AddYears(-1), DateTime.Now, DateTime.Now.AddHours(8), 
-        StatusEmpl.FullTime, false);
+    var cook = new Cook(2, "John Mikenson", 20000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
+        StatusEmpl.FullTime, false, "Japanese", 2, "Stove");
     
-    Employee.SaveEmployee(cook);
-    branch.Employees.Add(cook); // Add the cook to the branch's employees collection
+    var chef = new Chef(3, "Mike Johnson", 23000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
+        StatusEmpl.FullTime, false, "Mexican", 2, 2);
+
+    var waiter = new Waiter(4, "Jelp Mei", 24000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
+        StatusEmpl.FullTime, false, 34.10);
+
+    var delivery = new DeliveryEmpl(5, "Goog Mei", 24000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
+        StatusEmpl.FullTime, false, "Daytona", "Warsaw");
+    
+    var flexible = new FlexibleEmpl(6, "Man Moi", 24000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
+        StatusEmpl.FullTime, false, "Daytona", "Warsaw", 103.50);
+    
+    AbstractEmployee.SaveEmployee(cook);
+    AbstractEmployee.SaveEmployee(chef);
+    AbstractEmployee.SaveEmployee(waiter);
+    AbstractEmployee.SaveEmployee(delivery);
+    AbstractEmployee.SaveEmployee(flexible);
 
     return "Cook created and added to the branch!";
 });
@@ -70,7 +78,7 @@ app.MapGet("/create-cook", () =>
 app.MapGet("/save-employees", () =>
 {
     string filepath = "employeesData.bin";
-    Employee.SaveExtent(filepath);
+    AbstractEmployee.SaveExtent(filepath);
     return "Employees saved!";
 });
 
@@ -78,20 +86,25 @@ app.MapGet("/save-employees", () =>
 app.MapGet("/load-employees", () =>
 {
     string filepath = "employeesData.bin";
-    Employee.LoadExtent(filepath);
+    AbstractEmployee.LoadExtent(filepath);
     return "Employees loaded!";
 });
 
 // Endpoint to retrieve and display all employees
 app.MapGet("/employees", () =>
 {
-    var employees = Employee.GetAllEmployees();
+    var employees = AbstractEmployee.GetAllEmployees();
     return employees.Select(emp => new
     {
         emp.Id,
         emp.Name,
-        emp.Role,
-        emp.Status
+        emp.Salary,
+        emp.HireDate,
+        emp.LayoffDate,
+        emp.ShiftStart,
+        emp.ShiftEnd,
+        emp.Status,
+        emp.IsBranchManager,
     });
 });
 

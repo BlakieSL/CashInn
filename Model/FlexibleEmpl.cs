@@ -3,8 +3,10 @@ using CashInn.Model.FlexibleEmplSetup;
 
 namespace CashInn.Model;
 
-public class FlexibleEmpl : Employee, IDeliveryEmpl, IWaiterEmpl 
+public class FlexibleEmpl : AbstractEmployee, IDeliveryEmpl, IWaiterEmpl
 {
+    public override string EmployeeType => "FlexibleEmpl";
+
     private string _vehicle;
     public string Vehicle
     {
@@ -41,13 +43,34 @@ public class FlexibleEmpl : Employee, IDeliveryEmpl, IWaiterEmpl
         }
     }
     public FlexibleEmpl(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
-        StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea,
+        StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea, double tipsEarned,
         DateTime? layoffDate = null)
-        : base(id, name, "Flexible Employee", salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
+        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
     {
         Vehicle = vehicle;
         DeliveryArea = deliveryArea;
+        TipsEarned = tipsEarned;
         ShiftStart = shiftStart;
         ShiftEnd = shiftEnd;
+    }
+    
+    protected override object ToSerializableObject()
+    {
+        return new
+        {
+            Id,
+            Name,
+            Salary,
+            HireDate,
+            ShiftStart,
+            ShiftEnd,
+            Status,
+            IsBranchManager,
+            LayoffDate,
+            Vehicle,
+            DeliveryArea,
+            TipsEarned,
+            EmployeeType
+        };
     }
 }

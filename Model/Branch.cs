@@ -33,9 +33,9 @@ public class Branch
     }
     
     [JsonIgnore]
-    public Employee? Manager { get; set; }
+    public AbstractEmployee? Manager { get; set; }
     [JsonIgnore]
-    public ICollection<Employee> Employees { get; set; }
+    public ICollection<AbstractEmployee> Employees { get; set; }
     [JsonIgnore]
     public Menu Menu { get; set; }
 
@@ -51,8 +51,8 @@ public class Branch
         ContactInfo = contactInfo;
     }
     
-    public Branch(int id, string location, string contactInfo, ICollection<Employee> employees, 
-        Menu menu, Employee? manager = null)
+    public Branch(int id, string location, string contactInfo, ICollection<AbstractEmployee> employees, 
+        Menu menu, AbstractEmployee? manager = null)
     {
         Id = id;
         Location = location;

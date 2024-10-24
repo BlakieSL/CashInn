@@ -2,40 +2,41 @@
 
 namespace CashInn.Model;
 
-public class Chef : Employee
+public class Chef : AbstractEmployee, IAbstractKitchenEmployee
 {
+    public override string EmployeeType => "Chef";
     public string SpecialtyCuisine { get; set; }
-
-    private int _experienceLevel;
-    public int ExperienceLevel
-    {
-        get => _experienceLevel;
-        set
-        {
-            if (value < 0)
-                throw new ArgumentException("Experience level cannot be negative", nameof(ExperienceLevel));
-            _experienceLevel = value;
-        }
-    }
-    public List<Cook> ManagedCooks { get; set; }
-    
+    public int YearsOfExperience { get; set; }
+    public int MichelinStars { get; set; }
+    private double ExperienceBonus { get; }
     public Chef(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
-        StatusEmpl status, bool isBranchManager, string specialtyCuisine, int experienceLevel,
+        StatusEmpl status, bool isBranchManager, string specialtyCuisine, int experienceLevel, int michelinStars,
         DateTime? layoffDate = null)
-        : base(id, name, "Chef", salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
+        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
     {
         SpecialtyCuisine = specialtyCuisine;
-        ExperienceLevel = experienceLevel;
-        ManagedCooks = new List<Cook>();
+        YearsOfExperience = experienceLevel;
+        MichelinStars = michelinStars;
+        ExperienceBonus = YearsOfExperience * 0.04 * salary;
     }
-
-    public void AddCook(Cook cook)
+    
+    protected override object ToSerializableObject()
     {
-        ManagedCooks.Add(cook);
-    }
-
-    public bool RemoveCook(Cook cook)
-    {
-        return ManagedCooks.Remove(cook);
+        return new
+        {
+            Id,
+            Name,
+            Salary,
+            HireDate,
+            ShiftStart,
+            ShiftEnd,
+            Status,
+            IsBranchManager,
+            LayoffDate,
+            SpecialtyCuisine,
+            YearsOfExperience,
+            MichelinStars,
+            EmployeeType
+        };
     }
 }

@@ -3,8 +3,10 @@ using CashInn.Model.FlexibleEmplSetup;
 
 namespace CashInn.Model;
 
-public class Waiter : Employee, IWaiterEmpl
+public class Waiter : AbstractEmployee, IWaiterEmpl
 { 
+    public override string EmployeeType => "Waiter";
+
     private double _tipsEarned;
     public double TipsEarned
     {
@@ -19,8 +21,26 @@ public class Waiter : Employee, IWaiterEmpl
     public Waiter(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, 
         DateTime shiftEnd, StatusEmpl status, bool isBranchManager,  double tipsEarned,
         DateTime? layoffDate = null)
-        : base(id, name, "Chef", salary, hireDate, shiftStart, shiftEnd, status, isBranchManager,layoffDate)
+        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager,layoffDate)
     {
         TipsEarned = tipsEarned;
+    }
+    
+    protected override object ToSerializableObject()
+    {
+        return new
+        {
+            Id,
+            Name,
+            Salary,
+            HireDate,
+            ShiftStart,
+            ShiftEnd,
+            Status,
+            IsBranchManager,
+            LayoffDate,
+            TipsEarned,
+            EmployeeType
+        };
     }
 }
