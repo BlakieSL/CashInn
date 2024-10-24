@@ -43,7 +43,6 @@ namespace CashInn.Test
         [Test]
         public void Vehicle_SetWithNullOrWhiteSpace_ShouldThrowArgumentException()
         {
-            // Act & Assert
             var ex = Assert.Throws<ArgumentException>(() => _flexibleEmpl.Vehicle = "");
             Assert.That(ex.Message.Equals("Vehicle cannot be null or empty (Parameter 'Vehicle')"));
         }
@@ -51,7 +50,6 @@ namespace CashInn.Test
         [Test]
         public void DeliveryArea_SetWithNullOrWhiteSpace_ShouldThrowArgumentException()
         {
-            // Act & Assert
             var ex = Assert.Throws<ArgumentException>(() => _flexibleEmpl.DeliveryArea = "");
             Assert.That(ex.Message.Equals("Delivery area cannot be null or empty (Parameter 'DeliveryArea')"));
         }
@@ -59,7 +57,6 @@ namespace CashInn.Test
         [Test]
         public void TipsEarned_SetWithNegativeValue_ShouldThrowArgumentException()
         {
-            // Act & Assert
             var ex = Assert.Throws<ArgumentException>(() => _flexibleEmpl.TipsEarned = -50);
             Assert.That(ex.Message.Equals("Tips earned cannot be negative (Parameter 'TipsEarned')"));
         }
@@ -67,7 +64,6 @@ namespace CashInn.Test
         [Test]
         public void Constructor_WithInvalidVehicle_ShouldThrowArgumentException()
         {
-            // Act & Assert
             var ex = Assert.Throws<ArgumentException>(() =>
                 new FlexibleEmpl(
                     id: 1,
