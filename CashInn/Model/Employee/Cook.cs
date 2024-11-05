@@ -40,8 +40,10 @@ public class Cook : AbstractEmployee, IKitchenEmpl
     private string _station;
 
     public override string EmployeeType => "Cook";
-    public Cook(int id, string name, double salary, DateTime hireDate, DateTime shiftStart,
-        DateTime shiftEnd, StatusEmpl status, bool isBranchManager, string specialtyCuisine, int yearsOfExperience, string station, DateTime? layoffDate = null) 
+    public Cook(
+        int id, string name, double salary, DateTime hireDate, DateTime shiftStart,
+        DateTime shiftEnd, StatusEmpl status, bool isBranchManager, string specialtyCuisine, 
+        int yearsOfExperience, string station, DateTime? layoffDate = null) 
         : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
     {
         SpecialtyCuisine = specialtyCuisine;
