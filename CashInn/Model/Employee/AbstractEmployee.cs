@@ -94,6 +94,7 @@ public abstract class AbstractEmployee
         }
     }
     private DateTime _shiftEnd;
+    
     public StatusEmpl Status { get; set; }
     public bool IsBranchManager { get; set; }
     
