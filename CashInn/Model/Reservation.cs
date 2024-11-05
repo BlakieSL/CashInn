@@ -34,6 +34,8 @@ public class Reservation : ClassExtent<Reservation>
     {
         Id = id;
         NumberOfGuests = numberOfGuests;
+        
+        AddInstance(this);
     }
     
     public Reservation(){}

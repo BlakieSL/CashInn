@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CashInn.Model.Employee;
-using CashInn.Model.Payment;
 
 namespace CashInn.Helper;
 
@@ -20,7 +18,7 @@ public abstract class ClassExtent<T> where T : ClassExtent<T>
 
     protected static void AddInstance(T instance)
     {
-        Instances.Add(instance);
+        if (instance != null!) Instances.Add(instance);
     }
 
     public static void LoadExtent()
@@ -43,5 +41,10 @@ public abstract class ClassExtent<T> where T : ClassExtent<T>
     {
         var instance = (T)Activator.CreateInstance(typeof(T), true)!; 
         return instance.FilePath;
+    }
+
+    public static void ClearExtent()
+    {
+        Instances.Clear();
     }
 }

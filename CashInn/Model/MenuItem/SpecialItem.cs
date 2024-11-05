@@ -7,8 +7,8 @@ public class SpecialItem : AbstractMenuItem
         get => _validFrom;
         set
         {
-            // if (value > DateTime.Now)
-                // throw new ArgumentException("ValidFrom cannot be in the future", nameof(ValidFrom));
+            if (value > DateTime.Now.AddMinutes(1))
+                throw new ArgumentException("ValidFrom cannot be in the future", nameof(ValidFrom));
             _validFrom = value;
         }
     }

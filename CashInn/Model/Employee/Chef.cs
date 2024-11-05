@@ -27,7 +27,6 @@ public class Chef : AbstractEmployee, IKitchenEmpl
             if (value < 0)
                 throw new ArgumentException("Years of experience cannot be negative", nameof(YearsOfExperience));
             _yearsOfExperience = value;
-            CalculateBonus();
         }
     }
     
@@ -43,8 +42,11 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         }
     }
     
-    private double ExperienceBonus { get; set; }
-    
+    public double ExperienceBonus
+    {
+        get =>  YearsOfExperience * 0.04 * Salary;
+    }
+
     public Chef(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
         StatusEmpl status, bool isBranchManager, string specialtyCuisine, int experienceLevel, int michelinStars,
         DateTime? layoffDate = null)
@@ -53,14 +55,8 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         SpecialtyCuisine = specialtyCuisine;
         YearsOfExperience = experienceLevel;
         MichelinStars = michelinStars;
-        CalculateBonus();
         
         SaveEmployee(this);
-    }
-
-    private void CalculateBonus()
-    {
-        ExperienceBonus = YearsOfExperience * 0.04 * Salary;
     }
     
     public override object ToSerializableObject()

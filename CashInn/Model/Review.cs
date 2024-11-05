@@ -37,6 +37,8 @@ public class Review : ClassExtent<Review>
         Id = id;
         ReviewRating = rating;
         Description = description;
+        
+        AddInstance(this);
     }
     
     public Review(){}

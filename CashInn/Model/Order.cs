@@ -39,6 +39,8 @@ public class Order : ClassExtent<Order>
         Id = id;
         DateAndTime = dateTime;
         IsDelivered = isDelivered;
+        
+        AddInstance(this);
     }
     
     public Order(){}

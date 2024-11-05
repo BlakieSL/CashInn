@@ -34,6 +34,8 @@ public class Table : ClassExtent<Table>
     {
         Id = id;
         Capacity = capacity;
+        
+        AddInstance(this);
     }
     
     public Table(){}
