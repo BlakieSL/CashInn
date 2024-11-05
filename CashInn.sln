@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashInn", "CashInn\CashInn.csproj", "{39D3344D-94E4-4DA7-848B-A86B81EF18EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{51269017-6A33-44D8-9351-7AB51CDB51B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39D3344D-94E4-4DA7-848B-A86B81EF18EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D3344D-94E4-4DA7-848B-A86B81EF18EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D3344D-94E4-4DA7-848B-A86B81EF18EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D3344D-94E4-4DA7-848B-A86B81EF18EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51269017-6A33-44D8-9351-7AB51CDB51B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51269017-6A33-44D8-9351-7AB51CDB51B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51269017-6A33-44D8-9351-7AB51CDB51B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51269017-6A33-44D8-9351-7AB51CDB51B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

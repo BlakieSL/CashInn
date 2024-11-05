@@ -1,0 +1,87 @@
+# Ignore Rider-specific files
+.idea/
+.idea_modules/
+
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.rsuser
+*.suo
+*.userprefs
+*.orig
+
+# Ignore Rider system files
+.idea/*
+*.sln.iml
+
+# Ignore auto-generated VSCode files
+.vscode/
+
+# Ignore logs, database files, and results
+*.log
+*.ldb
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+project.lock.json
+
+# Ignore compiled DLLs and EXEs
+*.dll
+*.exe
+*.pdb
+*.dll.config
+
+# Ignore Publish directory
+.publish/
+
+# Ignore user-specific files
+*.csproj.user
+*.dbmdl
+*.bak
+*.swp
+
+# Ignore Rider workspace
+.idea/workspace.xml
+.idea/workspace.xml*
+.idea/modules.xml
+.idea/dotnet
+.idea/.idea_modules.xml
+
+# Ignore configuration and secret files
+appsettings.json
+appsettings.*.json
+
+# Ignore Visual Studio caches
+.vscode-test/
+testresult.xml
+.vscode-launch.json
+
+# Ignore compiled files
+dist/
+tmp/
+temp/
+
+# Ignore coverage output
+coverage/
+coverage.info
+
+# Ignore database files
+*.mdf
+*.ldf
+*.sqlite
+*.sqlite3
+
+# Ignore unnecessary files
+Thumbs.db
+.DS_Store
+
+# Ignore OS-generated files
+ehthumbs.db
+desktop.ini
+
