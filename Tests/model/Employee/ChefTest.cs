@@ -8,7 +8,6 @@ namespace Tests.model.Employee;
 public class ChefTest
 {
 private Chef _chef = null!;
-    
     [SetUp]
     public void SetUp()
     {

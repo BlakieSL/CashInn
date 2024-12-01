@@ -8,7 +8,7 @@ namespace CashInn.Model.Employee;
 
 public abstract class AbstractEmployee
 {
-    private static string _filepath = ClassExtentFiles.EmployeesFile;
+    private static readonly string _filepath = ClassExtentFiles.EmployeesFile;
     [JsonIgnore]
     public abstract string EmployeeType { get; }
     private static readonly ICollection<AbstractEmployee> Employees = new List<AbstractEmployee>();
@@ -121,8 +121,8 @@ public abstract class AbstractEmployee
 
     public static void LoadExtent()
     {
+        ClearExtent();
         var deserializedEmployees = Saver.Deserialize<List<dynamic>>(_filepath);
-        Employees.Clear();
 
         if (deserializedEmployees == null) return;
 
@@ -148,102 +148,42 @@ public abstract class AbstractEmployee
             bool isBranchManager = employeeData.GetProperty("IsBranchManager").GetBoolean();
             
             DateTime? layoffDate = null;
-            if (employeeData.TryGetProperty("LayoffDate", out JsonElement layoffDateProperty) && layoffDateProperty.ValueKind != JsonValueKind.Null)
+            if (employeeData.TryGetProperty("LayoffDate", out JsonElement layoffDateProperty) 
+                && layoffDateProperty.ValueKind != JsonValueKind.Null)
             {
                 layoffDate = layoffDateProperty.GetDateTime();
             }
             
             string employeeType = employeeData.GetProperty("EmployeeType").GetString();
-            AbstractEmployee abstractEmployee;
-            if (employeeType == "Cook")
+            AbstractEmployee abstractEmployee = employeeType switch
             {
-                abstractEmployee = new Cook(
-                    id,
-                    name,
-                    salary,
-                    hireDate,
-                    shiftStart,
-                    shiftEnd,
-                    emplStatus,
-                    isBranchManager,
+                "Cook" => new Cook(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus, isBranchManager,
                     employeeData.GetProperty("SpecialtyCuisine").ToString(),
                     employeeData.GetProperty("YearsOfExperience").GetInt32(),
-                    employeeData.GetProperty("Station").ToString(),
-                    layoffDate
-                );
-            }
-            else if (employeeType == "Chef")
-            {
-                abstractEmployee = new Chef(
-                    id,
-                    name,
-                    salary,
-                    hireDate,
-                    shiftStart,
-                    shiftEnd,
-                    emplStatus,
-                    isBranchManager,
+                    employeeData.GetProperty("Station").ToString(), layoffDate),
+                
+                "Chef" => new Chef(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus, isBranchManager,
                     employeeData.GetProperty("SpecialtyCuisine").ToString(),
                     employeeData.GetProperty("YearsOfExperience").GetInt32(),
-                    employeeData.GetProperty("MichelinStars").GetInt32(),
-                    layoffDate
-                );
-            } 
-            else if (employeeType == "DeliveryEmpl")
-            {
-                abstractEmployee = new DeliveryEmpl(
-                    id,
-                    name,
-                    salary,
-                    hireDate,
-                    shiftStart,
-                    shiftEnd,
-                    emplStatus,
-                    isBranchManager,
-                    employeeData.GetProperty("Vehicle").ToString(),
+                    employeeData.GetProperty("MichelinStars").GetInt32(), layoffDate),
+                
+                "DeliveryEmpl" => new DeliveryEmpl(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus,
+                    isBranchManager, employeeData.GetProperty("Vehicle").ToString(),
+                    employeeData.GetProperty("DeliveryArea").ToString(), layoffDate),
+                
+                "FlexibleEmpl" => new FlexibleEmpl(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus,
+                    isBranchManager, employeeData.GetProperty("Vehicle").ToString(),
                     employeeData.GetProperty("DeliveryArea").ToString(),
-                    layoffDate
-                );
-            }
-            else if (employeeType == "FlexibleEmpl")
-            {
-                abstractEmployee = new FlexibleEmpl(
-                    id,
-                    name,
-                    salary,
-                    hireDate,
-                    shiftStart,
-                    shiftEnd,
-                    emplStatus,
-                    isBranchManager,
-                    employeeData.GetProperty("Vehicle").ToString(),
-                    employeeData.GetProperty("DeliveryArea").ToString(),
-                    employeeData.GetProperty("TipsEarned").GetDouble(),
-                    layoffDate
-                );
-            }
-            else if (employeeType == "Waiter")
-            {
-                abstractEmployee = new Waiter(
-                    id,
-                    name,
-                    salary,
-                    hireDate,
-                    shiftStart,
-                    shiftEnd,
-                    emplStatus,
-                    isBranchManager,
-                    employeeData.GetProperty("TipsEarned").GetDouble(),
-                    layoffDate
-                );
-            }
-            else
-            {
-                throw new InvalidOperationException("Unknown employee type.");
-            }
+                    employeeData.GetProperty("TipsEarned").GetDouble(), layoffDate),
+                
+                "Waiter" => new Waiter(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus, isBranchManager,
+                    employeeData.GetProperty("TipsEarned").GetDouble(), layoffDate),
+                
+                _ => throw new InvalidOperationException("Unknown employee type.")
+            };
         }
     }
-    
+
     public static void SaveEmployee(AbstractEmployee abstractEmployee)
     {
         ArgumentNullException.ThrowIfNull(abstractEmployee);
@@ -253,5 +193,10 @@ public abstract class AbstractEmployee
     public static ICollection<AbstractEmployee> GetAll()
     {
         return Employees.ToImmutableList();
+    }
+
+    public static void ClearExtent()
+    {
+        Employees.Clear();
     }
 }

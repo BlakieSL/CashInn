@@ -51,7 +51,7 @@ public class ClassExtentTests
         
         var loadedInstances = TestClass.GetAll();
 
-        Assert.AreEqual(2, loadedInstances.Count);
+        Assert.That(loadedInstances, Has.Count.EqualTo(2));
         Assert.IsTrue(loadedInstances.Any(i => i.Id == 1));
         Assert.IsTrue(loadedInstances.Any(i => i.Id == 2));
     }
@@ -62,7 +62,7 @@ public class ClassExtentTests
         var instance = new TestClass(1);
         instance.Id = 5;
         
-        Assert.AreEqual(5, instance.Id);
+        Assert.That(instance.Id, Is.EqualTo(5));
         
         Assert.IsTrue(TestClass.GetAll().Any(i => i.Id == 5));
     }
@@ -76,13 +76,13 @@ public class ClassExtentTests
         TestClass.SaveExtent(); 
         
         // TestClass.LoadExtent();
-        Assert.AreEqual(2, TestClass.GetAll().Count);
+        Assert.That(TestClass.GetAll().Count, Is.EqualTo(2));
 
         instance1 = null!;
         instance2 = null!;
         TestClass.LoadExtent();
 
-        Assert.AreEqual(2, TestClass.GetAll().Count);
+        Assert.That(TestClass.GetAll().Count, Is.EqualTo(2));
         
         var loadedInstances = TestClass.GetAll();
         Assert.IsTrue(loadedInstances.Any(i => i.Id == 1));

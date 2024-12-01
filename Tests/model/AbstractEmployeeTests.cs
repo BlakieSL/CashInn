@@ -7,9 +7,22 @@ namespace Tests.model;
 public class AbstractEmployeeTests
 {
     private Cook _cook = null!;
+    private Chef _chef = null!;
+    private const string TestFilePath = "TestEmployees.json";
+
     [SetUp]
     public void SetUp()
     {
+        AbstractEmployee.ClearExtent();
+        if (File.Exists(TestFilePath))
+        {
+            File.Delete(TestFilePath);
+        }
+
+        typeof(AbstractEmployee)
+            .GetField("_filepath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
+            .SetValue(null, TestFilePath);
+
         _cook = new Cook(
             1,
             "Test Cook",
@@ -23,7 +36,33 @@ public class AbstractEmployeeTests
             5,
             "Main Kitchen"
         );
+
+        _chef = new Chef(
+            2,
+            "Test Chef",
+            45000,
+            DateTime.Now.AddYears(-2),
+            DateTime.Today.AddHours(10),
+            DateTime.Today.AddHours(18),
+            StatusEmpl.PartTime,
+            true,
+            "French",
+            10,
+            2
+        );
+
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        if (File.Exists(TestFilePath))
+        {
+            File.Delete(TestFilePath);
+        }
+        AbstractEmployee.ClearExtent();
+    }
+
 
     [Test]
     public void Id_SetNegativeValue_ShouldThrowException()
@@ -41,7 +80,7 @@ public class AbstractEmployeeTests
     [Test]
     public void Name_SetNull_ShouldThrowException()
     {
-        Assert.Throws<ArgumentException>(() => _cook.Name = null);
+        Assert.Throws<ArgumentException>(() => _cook.Name = null!);
     }
 
     [Test]
@@ -110,9 +149,7 @@ public class AbstractEmployeeTests
     [Test]
     public void ShiftStart_SetAfterShiftEnd_ShouldThrowException()
     {
-        // Temporarily set ShiftStart to a valid time before ShiftEnd
         _cook.ShiftStart = DateTime.Today.AddHours(7);
-        
         _cook.ShiftEnd = DateTime.Today.AddHours(8);
         
         Assert.Throws<ArgumentException>(() => _cook.ShiftStart = DateTime.Today.AddHours(10));
@@ -143,5 +180,90 @@ public class AbstractEmployeeTests
         _cook.ShiftStart = DateTime.Today.AddHours(8);
         _cook.ShiftEnd = shiftEnd;
         Assert.That(_cook.ShiftEnd, Is.EqualTo(shiftEnd));
+    }
+
+    [Test]
+    public void SaveEmployee_ShouldAddEmployeeToCollection()
+    {
+        AbstractEmployee.ClearExtent();
+        AbstractEmployee.SaveEmployee(_cook);
+
+        var employees = AbstractEmployee.GetAll();
+        Assert.That(employees, Has.Count.EqualTo(1));
+        Assert.That(employees.First(), Is.EqualTo(_cook));
+    }
+
+    [Test]
+    public void GetAll_ShouldReturnImmutableListOfEmployees()
+    {
+        AbstractEmployee.ClearExtent();
+        AbstractEmployee.SaveEmployee(_cook);
+        AbstractEmployee.SaveEmployee(_chef);
+
+        var employees = AbstractEmployee.GetAll();
+
+        Assert.That(employees, Has.Count.EqualTo(2));
+        Assert.That(employees, Contains.Item(_cook));
+        Assert.That(employees, Contains.Item(_chef));
+        Assert.That(() => (employees).Add(_cook), Throws.TypeOf<NotSupportedException>());
+    }
+
+    [Test]
+    public void ClearExtent_ShouldRemoveAllEmployees()
+    {
+        AbstractEmployee.SaveEmployee(_cook);
+        AbstractEmployee.SaveEmployee(_chef);
+
+        AbstractEmployee.ClearExtent();
+
+        var employees = AbstractEmployee.GetAll();
+        Assert.That(employees, Is.Empty);
+    }
+
+    [Test]
+    public void SaveExtent_ShouldWriteEmployeesToFile()
+    {
+        AbstractEmployee.ClearExtent();
+        AbstractEmployee.SaveEmployee(_cook);
+        AbstractEmployee.SaveEmployee(_chef);
+
+        AbstractEmployee.SaveExtent();
+
+        Assert.That(File.Exists(TestFilePath), Is.True);
+        var fileContent = File.ReadAllText(TestFilePath);
+        Assert.That(fileContent, Does.Contain("Test Cook"));
+        Assert.That(fileContent, Does.Contain("Test Chef"));
+    }
+
+    [Test]
+    public void LoadExtent_ShouldRetrieveEmployeesFromFile()
+    {
+        AbstractEmployee.ClearExtent();
+
+        AbstractEmployee.SaveEmployee(_cook);
+        AbstractEmployee.SaveEmployee(_chef);
+        AbstractEmployee.SaveExtent();
+
+        // Clear the in-memory collection
+        AbstractEmployee.ClearExtent();
+
+        AbstractEmployee.LoadExtent();
+
+        var employees = AbstractEmployee.GetAll();
+        Assert.That(employees, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(employees.Any(e => e.Name == "Test Cook"), Is.True);
+            Assert.That(employees.Any(e => e.Name == "Test Chef"), Is.True);
+        });
+    }
+
+    [Test]
+    public void LoadExtent_WithInvalidFile_ShouldNotThrowException()
+    {
+        File.WriteAllText(TestFilePath, "Invalid JSON Content");
+
+        Assert.DoesNotThrow(AbstractEmployee.LoadExtent);
+        Assert.That(AbstractEmployee.GetAll(), Is.Empty);
     }
 }
