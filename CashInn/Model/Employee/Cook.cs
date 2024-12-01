@@ -4,6 +4,20 @@ namespace CashInn.Model.Employee;
 
 public class Cook : AbstractEmployee, IKitchenEmpl
 {
+    public Chef? Manager { get; private set; }
+
+    public void SetManager(Chef? manager)
+    {
+        if (Manager == manager) return;
+
+        Manager = manager;
+
+        var previousManager = Manager;
+        previousManager?.RemoveCook(this);
+        manager?.AddCook(this);
+    }
+
+
     private string _specialtyCuisine;
     public string SpecialtyCuisine
     {
