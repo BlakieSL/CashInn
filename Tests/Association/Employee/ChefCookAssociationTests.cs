@@ -164,4 +164,107 @@ public class ChefCookAssociationTests
     {
         Assert.DoesNotThrow(() => _cook.RemoveManager());
     }
+
+    [Test]
+    public void UpdateCook_ShouldReplaceOldCookWithNewCook()
+    {
+        var newCook = new Cook(
+            3,
+            "New Cook",
+            32000,
+            DateTime.Now.AddYears(-2),
+            DateTime.Today.AddHours(8),
+            DateTime.Today.AddHours(16),
+            StatusEmpl.FullTime,
+            false,
+            "Japanese",
+            4,
+            "Grill Station"
+        );
+
+        _chef.AddCook(_cook);
+        _chef.UpdateCook(_cook, newCook);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_chef.ManagedCooks, Does.Not.Contain(_cook));
+            Assert.That(_chef.ManagedCooks, Contains.Item(newCook));
+            Assert.That(newCook.Manager, Is.EqualTo(_chef));
+            Assert.That(_cook.Manager, Is.Null);
+        });
+    }
+
+    [Test]
+    public void UpdateCook_WhenOldCookNotManaged_ShouldThrowException()
+    {
+        var newCook = new Cook(
+            3,
+            "New Cook",
+            32000,
+            DateTime.Now.AddYears(-2),
+            DateTime.Today.AddHours(8),
+            DateTime.Today.AddHours(16),
+            StatusEmpl.FullTime,
+            false,
+            "Japanese",
+            4,
+            "Grill Station"
+        );
+
+        Assert.Throws<InvalidOperationException>(() => _chef.UpdateCook(_cook, newCook));
+    }
+
+    [Test]
+    public void UpdateManager_ShouldReplaceOldManagerWithNewManager()
+    {
+        var newChef = new Chef(
+            3,
+            "New Chef",
+            55000,
+            DateTime.Now.AddYears(-4),
+            DateTime.Today.AddHours(12),
+            DateTime.Today.AddHours(20),
+            StatusEmpl.FullTime,
+            false,
+            "Italian",
+            8,
+            3
+        );
+
+        _cook.AddManager(_chef);
+        _cook.UpdateManager(newChef);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_cook.Manager, Is.EqualTo(newChef));
+            Assert.That(newChef.ManagedCooks, Contains.Item(_cook));
+            Assert.That(_chef.ManagedCooks, Does.Not.Contain(_cook));
+        });
+    }
+
+    [Test]
+    public void UpdateManager_WhenCookHasNoManager_ShouldSetNewManager()
+    {
+        var newChef = new Chef(
+            3,
+            "New Chef",
+            55000,
+            DateTime.Now.AddYears(-4),
+            DateTime.Today.AddHours(12),
+            DateTime.Today.AddHours(20),
+            StatusEmpl.FullTime,
+            false,
+            "Italian",
+            8,
+            3
+        );
+
+        _cook.UpdateManager(newChef);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_cook.Manager, Is.EqualTo(newChef));
+            Assert.That(newChef.ManagedCooks, Contains.Item(_cook));
+        });
+    }
 }

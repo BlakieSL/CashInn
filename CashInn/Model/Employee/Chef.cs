@@ -104,6 +104,18 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         cook.RemoveManager();
     }
 
+    public void UpdateCook(Cook oldCook, Cook newCook)
+    {
+        ArgumentNullException.ThrowIfNull(oldCook);
+        ArgumentNullException.ThrowIfNull(newCook);
+
+        if(!_managedCooks.Contains(oldCook))
+            throw new InvalidOperationException("Cook is not managed by this chef");
+
+        RemoveCook(oldCook);
+        AddCook(newCook);
+    }
+
     internal void AddCookInternal(Cook cook)
     {
         if (!_managedCooks.Contains(cook))
@@ -114,6 +126,6 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 
     internal void RemoveCookInternal(Cook cook)
     {
-            _managedCooks.Remove(cook);
+        _managedCooks.Remove(cook);
     }
 }

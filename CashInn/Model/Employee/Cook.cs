@@ -45,13 +45,14 @@ public class Cook : AbstractEmployee, IKitchenEmpl
     public Cook(
         int id, string name, double salary, DateTime hireDate, DateTime shiftStart,
         DateTime shiftEnd, StatusEmpl status, bool isBranchManager, string specialtyCuisine, 
-        int yearsOfExperience, string station, DateTime? layoffDate = null) 
+        int yearsOfExperience, string station, DateTime? layoffDate = null, Chef? manager = null)
         : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
     {
         SpecialtyCuisine = specialtyCuisine;
         YearsOfExperience = yearsOfExperience;
         Station = station;
-        
+        if (manager != null) AddManager(manager);
+
         SaveEmployee(this);
     }
     
@@ -75,7 +76,6 @@ public class Cook : AbstractEmployee, IKitchenEmpl
         };
     }
 
-
     public void AddManager(Chef manager)
     {
         ArgumentNullException.ThrowIfNull(manager);
@@ -98,5 +98,13 @@ public class Cook : AbstractEmployee, IKitchenEmpl
         var currentManager = Manager;
         Manager = null;
         currentManager.RemoveCookInternal(this);
+    }
+
+    public void UpdateManager(Chef newManager)
+    {
+        ArgumentNullException.ThrowIfNull(newManager);
+
+        RemoveManager();
+        AddManager(newManager);
     }
 }
