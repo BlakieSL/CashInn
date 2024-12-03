@@ -6,7 +6,6 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 {
     private readonly List<Cook> _managedCooks = [];
     public IEnumerable<Cook> ManagedCooks => _managedCooks.AsReadOnly();
-
     public override string EmployeeType => "Chef";
     private string _specialtyCuisine;
     public string SpecialtyCuisine
@@ -89,7 +88,7 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 
         if (cook.Manager != null && cook.Manager != this)
         {
-            throw new InvalidOperationException("Cook is already managed by another Chef.");
+            throw new InvalidOperationException("Cook is already managed by another chef");
         }
 
         _managedCooks.Add(cook);
@@ -115,6 +114,6 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 
     internal void RemoveCookInternal(Cook cook)
     {
-        _managedCooks.Remove(cook);
+            _managedCooks.Remove(cook);
     }
 }
