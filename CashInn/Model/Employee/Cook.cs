@@ -6,18 +6,25 @@ public class Cook : AbstractEmployee, IKitchenEmpl
 {
     public Chef? Manager { get; private set; }
 
-    public void SetManager(Chef? manager)
+    public void SetManager(Chef? newManager)
     {
-        if (Manager == manager) return;
-
-        Manager = manager;
-
-        var previousManager = Manager;
-        previousManager?.RemoveCook(this);
-        manager?.AddCook(this);
+        SetManagerNoUpdate(newManager);
+        newManager?.AddCookNoUpdate(this);
     }
-
-
+    
+    internal void SetManagerNoUpdate(Chef? newManager)
+    {
+        ArgumentNullException.ThrowIfNull(newManager);
+        
+        if (newManager.ManagedCooks.Contains(this))
+            throw new InvalidOperationException("This cook is already part of the new chef's managed cooks.");
+        
+        //remove cook from previous owner's managed cooks
+        Manager?.RemoveCook(this);
+        //method does not update chef
+        Manager = newManager;
+    }
+    
     private string _specialtyCuisine;
     public string SpecialtyCuisine
     {

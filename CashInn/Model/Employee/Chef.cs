@@ -6,7 +6,6 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 {
     private readonly List<Cook> _managedCooks = [];
     public IEnumerable<Cook> ManagedCooks => _managedCooks.AsReadOnly();
-
     public override string EmployeeType => "Chef";
     private string _specialtyCuisine;
     public string SpecialtyCuisine
@@ -81,22 +80,31 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         };
     }
 
-    public void AddCook(Cook cook)
+    public void AddCook(Cook? cook)
+    {
+        AddCookNoUpdate(cook); 
+        cook?.SetManagerNoUpdate(this);
+    }
+    
+    internal void AddCookNoUpdate(Cook? cook)
     {
         ArgumentNullException.ThrowIfNull(cook);
-        if (cook.Manager != null)
-        {
+        
+        if (_managedCooks.Contains(cook)) 
+            throw new InvalidOperationException();
+        if (cook.Manager != null && cook.Manager != this)
             throw new InvalidOperationException("Cook is already managed by another Chef.");
-        }
-
+        //method does not update cook
         _managedCooks.Add(cook);
-        cook.SetManager(this);
     }
 
     public void RemoveCook(Cook cook)
     {
         ArgumentNullException.ThrowIfNull(cook);
-        if (!_managedCooks.Contains(cook)) return;
+        if (!_managedCooks.Contains(cook))
+        {
+            if (cook.Manager == this) cook.SetManager(null);
+        }
 
         _managedCooks.Remove(cook);
         cook.SetManager(null);
