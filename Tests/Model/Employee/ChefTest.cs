@@ -61,7 +61,7 @@ private Chef _chef = null!;
     [Test]
     public void YearsOfExperience_SetPositiveValue_ShouldCalculateBonus()
     {
-        double expectedBonus = 8 * 0.04 * _chef.Salary;
+        var expectedBonus = 8 * 0.04 * _chef.Salary;
         _chef.YearsOfExperience = 8;
         Assert.That(_chef.ExperienceBonus, Is.EqualTo(expectedBonus).Within(0.01));
     }

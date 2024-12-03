@@ -31,7 +31,7 @@ public class Chef : AbstractEmployee, IKitchenEmpl
             _yearsOfExperience = value;
         }
     }
-    
+
     private int _michelinStars;
     public int MichelinStars
     {
@@ -43,7 +43,7 @@ public class Chef : AbstractEmployee, IKitchenEmpl
             _michelinStars = value;
         }
     }
-    
+
     public double ExperienceBonus
     {
         get =>  YearsOfExperience * 0.04 * Salary;
@@ -57,10 +57,10 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         SpecialtyCuisine = specialtyCuisine;
         YearsOfExperience = experienceLevel;
         MichelinStars = michelinStars;
-        
+
         SaveEmployee(this);
     }
-    
+
     public override object ToSerializableObject()
     {
         return new
@@ -84,13 +84,16 @@ public class Chef : AbstractEmployee, IKitchenEmpl
     public void AddCook(Cook cook)
     {
         ArgumentNullException.ThrowIfNull(cook);
-        if (cook.Manager != null)
+
+        if (_managedCooks.Contains(cook)) return;
+
+        if (cook.Manager != null && cook.Manager != this)
         {
             throw new InvalidOperationException("Cook is already managed by another Chef.");
         }
 
         _managedCooks.Add(cook);
-        cook.SetManager(this);
+        cook.AddManager(this);
     }
 
     public void RemoveCook(Cook cook)
@@ -99,6 +102,19 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         if (!_managedCooks.Contains(cook)) return;
 
         _managedCooks.Remove(cook);
-        cook.SetManager(null);
+        cook.RemoveManager();
+    }
+
+    internal void AddCookInternal(Cook cook)
+    {
+        if (!_managedCooks.Contains(cook))
+        {
+            _managedCooks.Add(cook);
+        }
+    }
+
+    internal void RemoveCookInternal(Cook cook)
+    {
+        _managedCooks.Remove(cook);
     }
 }

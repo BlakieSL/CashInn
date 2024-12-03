@@ -6,18 +6,6 @@ public class Cook : AbstractEmployee, IKitchenEmpl
 {
     public Chef? Manager { get; private set; }
 
-    public void SetManager(Chef? manager)
-    {
-        if (Manager == manager) return;
-
-        Manager = manager;
-
-        var previousManager = Manager;
-        previousManager?.RemoveCook(this);
-        manager?.AddCook(this);
-    }
-
-
     private string _specialtyCuisine;
     public string SpecialtyCuisine
     {
@@ -85,5 +73,30 @@ public class Cook : AbstractEmployee, IKitchenEmpl
             Station,
             EmployeeType
         };
+    }
+
+
+    public void AddManager(Chef manager)
+    {
+        ArgumentNullException.ThrowIfNull(manager);
+
+        if (Manager == manager) return;
+
+        if (Manager != null)
+        {
+            throw new InvalidOperationException("Cook is already managed by another Chef.");
+        }
+
+        Manager = manager;
+        manager.AddCookInternal(this);
+    }
+
+    public void RemoveManager()
+    {
+        if (Manager == null) return;
+
+        var currentManager = Manager;
+        Manager = null;
+        currentManager.RemoveCookInternal(this);
     }
 }

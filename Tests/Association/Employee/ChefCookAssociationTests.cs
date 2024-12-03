@@ -8,7 +8,7 @@ namespace Tests.model.Employee;
 public class ChefCookAssociationTests
 {
     private Chef _chef = null!;
-    private Cook _cook1 = null!;
+    private Cook _cook = null!;
 
     [SetUp]
     public void SetUp()
@@ -27,7 +27,7 @@ public class ChefCookAssociationTests
             2
         );
 
-        _cook1 = new Cook(
+        _cook = new Cook(
             2,
             "Test Cook 1",
             30000,
@@ -45,13 +45,13 @@ public class ChefCookAssociationTests
     [Test]
     public void AddCook_ShouldAddCookToManagedCooks()
     {
-        _chef.AddCook(_cook1);
+        _chef.AddCook(_cook);
 
         Assert.Multiple(() =>
         {
             Assert.That(_chef.ManagedCooks.ToList(), Has.Count.EqualTo(1));
-            Assert.That(_chef.ManagedCooks, Contains.Item(_cook1));
-            Assert.That(_cook1.Manager, Is.EqualTo(_chef));
+            Assert.That(_chef.ManagedCooks, Contains.Item(_cook));
+            Assert.That(_cook.Manager, Is.EqualTo(_chef));
         });
     }
 
@@ -72,47 +72,63 @@ public class ChefCookAssociationTests
             1
         );
 
-        anotherChef.AddCook(_cook1);
+        anotherChef.AddCook(_cook);
 
-        Assert.Throws<InvalidOperationException>(() => _chef.AddCook(_cook1));
+        Assert.Throws<InvalidOperationException>(() => _chef.AddCook(_cook));
+    }
+
+    [Test]
+    public void AddCook_ShouldNotCauseInfiniteRecursion()
+    {
+        Assert.DoesNotThrow(() => _chef.AddCook(_cook));
     }
 
     [Test]
     public void RemoveCook_ShouldRemoveCookFromManagedCooksAndClearManager()
     {
-        _chef.AddCook(_cook1);
-        _chef.RemoveCook(_cook1);
+        _chef.AddCook(_cook);
+        _chef.RemoveCook(_cook);
 
         Assert.Multiple(() =>
         {
-            Assert.That(_chef.ManagedCooks, Does.Not.Contain(_cook1));
-            Assert.That(_cook1.Manager, Is.Null);
+            Assert.That(_chef.ManagedCooks, Does.Not.Contain(_cook));
+            Assert.That(_cook.Manager, Is.Null);
         });
     }
 
     [Test]
     public void RemoveCook_WhenCookNotManaged_ShouldNotThrowException()
     {
-        Assert.DoesNotThrow(() => _chef.RemoveCook(_cook1));
+        Assert.DoesNotThrow(() => _chef.RemoveCook(_cook));
     }
 
     [Test]
-    public void SetManager_ShouldUpdateManagerAndAddToManagedCooks()
+    public void ManagedCooks_ShouldBeReadOnly()
     {
-        _cook1.SetManager(_chef);
-
-        Assert.Multiple(() =>
+        Assert.Throws<NotSupportedException>(() =>
         {
-            Assert.That(_cook1.Manager, Is.EqualTo(_chef));
-            Assert.That(_chef.ManagedCooks, Contains.Item(_cook1));
+            var cooks = (ICollection<Cook>)_chef.ManagedCooks;
+            cooks.Add(_cook);
         });
     }
 
     [Test]
-    public void SetManager_ShouldRemoveCookFromPreviousManager()
+    public void AddManager_ShouldSetManagerForCook()
+    {
+        _cook.AddManager(_chef);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_cook.Manager, Is.EqualTo(_chef));
+            Assert.That(_chef.ManagedCooks, Contains.Item(_cook));
+        });
+    }
+
+    [Test]
+    public void AddManager_WhenCookAlreadyHasManager_ShouldThrowException()
     {
         var anotherChef = new Chef(
-            4,
+            3,
             "Another Chef",
             45000,
             DateTime.Now.AddYears(-3),
@@ -125,53 +141,27 @@ public class ChefCookAssociationTests
             1
         );
 
-        anotherChef.AddCook(_cook1);
-        _cook1.SetManager(_chef);
+        _cook.AddManager(anotherChef);
+
+        Assert.Throws<InvalidOperationException>(() => _cook.AddManager(_chef));
+    }
+
+    [Test]
+    public void RemoveManager_ShouldClearManagerForCook()
+    {
+        _cook.AddManager(_chef);
+        _cook.RemoveManager();
 
         Assert.Multiple(() =>
         {
-            Assert.That(_cook1.Manager, Is.EqualTo(_chef));
-            Assert.That(_chef.ManagedCooks, Contains.Item(_cook1));
-            Assert.That(anotherChef.ManagedCooks, Does.Not.Contain(_cook1));
+            Assert.That(_cook.Manager, Is.Null);
+            Assert.That(_chef.ManagedCooks, Does.Not.Contain(_cook));
         });
     }
 
     [Test]
-    public void SetManager_ToNull_ShouldRemoveCookFromChef()
+    public void RemoveManager_WhenCookHasNoManager_ShouldNotThrowException()
     {
-        _chef.AddCook(_cook1);
-        _cook1.SetManager(null);
-
-        Assert.That(_cook1.Manager, Is.Null);
-        Assert.That(_chef.ManagedCooks, Does.Not.Contain(_cook1));
-    }
-
-    [Test]
-    public void AddCook_ShouldNotCauseInfiniteRecursion()
-    {
-        Assert.DoesNotThrow(() => _chef.AddCook(_cook1));
-    }
-
-    [Test]
-    public void RemoveCook_ShouldNotCauseInfiniteRecursion()
-    {
-        _chef.AddCook(_cook1);
-        Assert.DoesNotThrow(() => _chef.RemoveCook(_cook1));
-    }
-
-    [Test]
-    public void SetManager_ShouldNotCauseInfiniteRecursion()
-    {
-        Assert.DoesNotThrow(() => _cook1.SetManager(_chef));
-    }
-
-    [Test]
-    public void ManagedCooks_ShouldBeReadOnly()
-    {
-        Assert.Throws<NotSupportedException>(() =>
-        {
-            var cooks = (ICollection<Cook>)_chef.ManagedCooks;
-            cooks.Add(_cook1);
-        });
+        Assert.DoesNotThrow(() => _cook.RemoveManager());
     }
 }
