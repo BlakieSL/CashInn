@@ -1,4 +1,5 @@
 ﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.Employee;
 
 namespace Tests.model.Employee;
@@ -9,10 +10,12 @@ public class ChefCookAssociationTests
 {
     private Chef _chef = null!;
     private Cook _cook = null!;
+    private Branch _branch = null!;
 
     [SetUp]
     public void SetUp()
     {
+        _branch = new Branch(1, "ul.Hermana", "+485757575");
         _chef = new Chef(
             1,
             "Test Chef",
@@ -24,7 +27,8 @@ public class ChefCookAssociationTests
             false,
             "French",
             10,
-            2
+            2,
+            _branch
         );
 
         _cook = new Cook(
@@ -38,7 +42,8 @@ public class ChefCookAssociationTests
             false,
             "Italian",
             5,
-            "Main Kitchen"
+            "Main Kitchen",
+            _branch
         );
     }
 
@@ -69,7 +74,8 @@ public class ChefCookAssociationTests
             true,
             "Mexican",
             7,
-            1
+            1,
+            _branch
         );
 
         anotherChef.AddCook(_cook);
@@ -138,7 +144,8 @@ public class ChefCookAssociationTests
             true,
             "Mexican",
             7,
-            1
+            1,
+            _branch
         );
 
         _cook.AddManager(anotherChef);
@@ -179,7 +186,8 @@ public class ChefCookAssociationTests
             false,
             "Japanese",
             4,
-            "Grill Station"
+            "Grill Station",
+            _branch
         );
 
         _chef.AddCook(_cook);
@@ -208,7 +216,8 @@ public class ChefCookAssociationTests
             false,
             "Japanese",
             4,
-            "Grill Station"
+            "Grill Station",
+            _branch
         );
 
         Assert.Throws<InvalidOperationException>(() => _chef.UpdateCook(_cook, newCook));
@@ -228,7 +237,8 @@ public class ChefCookAssociationTests
             false,
             "Italian",
             8,
-            3
+            3,
+            _branch
         );
 
         _cook.AddManager(_chef);
@@ -256,7 +266,8 @@ public class ChefCookAssociationTests
             false,
             "Italian",
             8,
-            3
+            3,
+            _branch
         );
 
         _cook.UpdateManager(newChef);

@@ -16,20 +16,21 @@ app.MapGet("/create-branch", () =>
 
 app.MapGet("/create-employees", () =>
 {
+    Branch branch = new Branch(1, "ul. Hermana", "+4857575757");
     var cook = new Cook(2, "John Mikenson", 20000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
-        StatusEmpl.FullTime, false, "Japanese", 2, "Stove");
+        StatusEmpl.FullTime, true, "Japanese", 2, "Stove", branch, branch);
     
     var chef = new Chef(3, "Mike Johnson", 23000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
-        StatusEmpl.FullTime, false, "Mexican", 2, 2);
+        StatusEmpl.FullTime, false, "Mexican", 2, 2, branch);
 
     var waiter = new Waiter(4, "Jelp Mei", 24000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
-        StatusEmpl.FullTime, false, 34.10);
+        StatusEmpl.FullTime, false, 34.10, branch);
 
     var delivery = new DeliveryEmpl(5, "Goog Mei", 24000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
-        StatusEmpl.FullTime, false, "Daytona", "Warsaw");
+        StatusEmpl.FullTime, false, "Daytona", "Warsaw", branch);
     
     var flexible = new FlexibleEmpl(6, "Man Moi", 24000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
-        StatusEmpl.FullTime, false, "Daytona", "Warsaw", 103.50);
+        StatusEmpl.FullTime, false, "Daytona", "Warsaw", 103.50, branch);
 
     AbstractEmployee.SaveExtent();
     return "Employees saved!";

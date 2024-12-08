@@ -1,4 +1,6 @@
-﻿using CashInn.Model;
+﻿using CashInn.Enum;
+using CashInn.Model;
+using CashInn.Model.Employee;
 
 namespace Tests.model;
 
@@ -6,13 +8,18 @@ namespace Tests.model;
 [TestOf(typeof(Kitchen))]
 public class KitchenTest
 {
+    private Branch _branch = null!;
+    private Cook _cook = null!;
     private Kitchen _kitchen = null!;
     private const string TestFilePath = "Kitchens.json";
 
     [SetUp]
     public void SetUp()
     {
-        _kitchen = new Kitchen(1, new List<string> { "Oven" });
+        _branch = new Branch(1, "ul. Hermana", "+4857575757");
+        _cook = new Cook(2, "John Mikenson", 20000, DateTime.Now.AddYears(-2), DateTime.Now, DateTime.Now.AddHours(8), 
+            StatusEmpl.FullTime, true, "Japanese", 2, "Stove", _branch);
+        _kitchen = new Kitchen(1, new List<string> { "Oven" }, new List<Cook> { _cook });
         if (File.Exists(TestFilePath))
         {
             File.Delete(TestFilePath);
@@ -78,8 +85,8 @@ public class KitchenTest
     [Test]
     public void LoadExtent_ShouldRetrieveStoredKitchensCorrectly()
     {
-        var kitchen1 = new Kitchen(1, new List<string> { "Oven" });
-        var kitchen2 = new Kitchen(2, new List<string> { "Stove" });
+        var kitchen1 = new Kitchen(1, new List<string> { "Oven" }, new List<Cook> {_cook});
+        var kitchen2 = new Kitchen(2, new List<string> { "Stove" }, new List<Cook> {_cook});
 
         Kitchen.SaveExtent(); // Assuming you save the extents after creating new kitchens
 

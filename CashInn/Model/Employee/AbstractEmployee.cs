@@ -12,7 +12,8 @@ public abstract class AbstractEmployee
     [JsonIgnore]
     public abstract string EmployeeType { get; }
     private static readonly ICollection<AbstractEmployee> Employees = new List<AbstractEmployee>();
-    
+    public Branch EmployerBranch { get; private set; }
+    public Branch? ManagedBranch { get; private set; }
     public int Id 
     {
         get => _id;
@@ -99,7 +100,8 @@ public abstract class AbstractEmployee
     public bool IsBranchManager { get; set; }
     
     protected AbstractEmployee(int id, string name, double salary, DateTime hireDate, DateTime shiftStart,
-        DateTime shiftEnd, StatusEmpl status, bool isBranchManager, DateTime? layoffDate = null)
+        DateTime shiftEnd, StatusEmpl status, bool isBranchManager, Branch employerBranch, 
+        Branch? managedBranch = null, DateTime? layoffDate = null)
     {
         Id = id;
         Name = name;
@@ -110,6 +112,13 @@ public abstract class AbstractEmployee
         Status = status;
         LayoffDate = layoffDate;
         IsBranchManager = isBranchManager;
+        
+        if (employerBranch == null)
+            throw new InvalidOperationException("Branch cannot be null");
+        if (managedBranch != null)
+            ManagedBranch = managedBranch;
+        
+        EmployerBranch = employerBranch;
     }
 
     public static void SaveExtent()
@@ -155,29 +164,35 @@ public abstract class AbstractEmployee
             }
             
             string employeeType = employeeData.GetProperty("EmployeeType").GetString();
+            Branch employerBranch = JsonSerializer.Deserialize<Branch>(employeeData.GetProperty("Branch").GetRawText());
+            if (employerBranch == null)
+            {
+                throw new InvalidOperationException("EmployerBranch cannot be null.");
+            }
+            Branch managedBranch = JsonSerializer.Deserialize<Branch>(employeeData.GetProperty("Branch").GetRawText());
             AbstractEmployee abstractEmployee = employeeType switch
             {
                 "Cook" => new Cook(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus, isBranchManager,
                     employeeData.GetProperty("SpecialtyCuisine").ToString(),
                     employeeData.GetProperty("YearsOfExperience").GetInt32(),
-                    employeeData.GetProperty("Station").ToString(), layoffDate),
+                    employeeData.GetProperty("Station").ToString(), employerBranch, managedBranch, layoffDate),
                 
                 "Chef" => new Chef(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus, isBranchManager,
                     employeeData.GetProperty("SpecialtyCuisine").ToString(),
                     employeeData.GetProperty("YearsOfExperience").GetInt32(),
-                    employeeData.GetProperty("MichelinStars").GetInt32(), layoffDate),
+                    employeeData.GetProperty("MichelinStars").GetInt32(), employerBranch, managedBranch, layoffDate),
                 
                 "DeliveryEmpl" => new DeliveryEmpl(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus,
                     isBranchManager, employeeData.GetProperty("Vehicle").ToString(),
-                    employeeData.GetProperty("DeliveryArea").ToString(), layoffDate),
+                    employeeData.GetProperty("DeliveryArea").ToString(), employerBranch, managedBranch, layoffDate),
                 
                 "FlexibleEmpl" => new FlexibleEmpl(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus,
                     isBranchManager, employeeData.GetProperty("Vehicle").ToString(),
                     employeeData.GetProperty("DeliveryArea").ToString(),
-                    employeeData.GetProperty("TipsEarned").GetDouble(), layoffDate),
+                    employeeData.GetProperty("TipsEarned").GetDouble(), employerBranch, managedBranch, layoffDate),
                 
                 "Waiter" => new Waiter(id, name, salary, hireDate, shiftStart, shiftEnd, emplStatus, isBranchManager,
-                    employeeData.GetProperty("TipsEarned").GetDouble(), layoffDate),
+                    employeeData.GetProperty("TipsEarned").GetDouble(), employerBranch, managedBranch, layoffDate),
                 
                 _ => throw new InvalidOperationException("Unknown employee type.")
             };
@@ -190,6 +205,12 @@ public abstract class AbstractEmployee
         Employees.Add(abstractEmployee);
     }
     
+    public static void DeleteEmployee(AbstractEmployee abstractEmployee)
+    {
+        ArgumentNullException.ThrowIfNull(abstractEmployee);
+        Employees.Remove(abstractEmployee);
+    }
+    
     public static ICollection<AbstractEmployee> GetAll()
     {
         return Employees.ToImmutableList();
@@ -198,5 +219,50 @@ public abstract class AbstractEmployee
     public static void ClearExtent()
     {
         Employees.Clear();
+    }
+
+    public void AddEmployerBranch(Branch branch)
+    {
+        ArgumentNullException.ThrowIfNull(branch);
+
+        if (EmployerBranch == branch) return;
+
+        if (EmployerBranch != null)
+        {
+            throw new InvalidOperationException("Employee is already employed by another Branch");
+        }
+
+        EmployerBranch = branch;
+        branch.AddEmployeeInternal(this);
+    }
+    
+    public void RemoveEmployerBranch()
+    {
+        EmployerBranch.RemoveEmployeeInternal(this);
+        DeleteEmployee(this);
+    }
+    
+    public void AddManagedBranch(Branch branch)
+    {
+        ArgumentNullException.ThrowIfNull(branch);
+
+        if (ManagedBranch == branch) return;
+
+        if (ManagedBranch != null)
+        {
+            throw new InvalidOperationException("Branch is already managed by another Employee");
+        }
+
+        ManagedBranch = branch;
+        branch.AddManagerInternal(this);
+    }
+    
+    public void RemoveManagedBranch()
+    {
+        if (ManagedBranch == null) return;
+
+        var currentBranch = ManagedBranch;
+        ManagedBranch = null;
+        currentBranch.RemoveManagerInternal();
     }
 }

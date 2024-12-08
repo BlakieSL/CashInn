@@ -1,4 +1,5 @@
 ﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.Employee;
 
 namespace Tests.model.Employee;
@@ -8,9 +9,11 @@ namespace Tests.model.Employee;
 public class ChefTest
 {
 private Chef _chef = null!;
+private Branch _branch = null!;
     [SetUp]
     public void SetUp()
     {
+        _branch = new Branch(1, "ul.Hermana", "+485757575");
         _chef = new Chef(
             1,
             "Test Chef",
@@ -22,7 +25,8 @@ private Chef _chef = null!;
             false,
             "French",
             10,
-            2
+            2,
+            _branch
         );
     }
 

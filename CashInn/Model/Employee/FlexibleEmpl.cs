@@ -44,9 +44,9 @@ public class FlexibleEmpl : AbstractEmployee, IDeliveryEmpl, IWaiterEmpl
     }
     private static int BonusPercentage = 15;
     public FlexibleEmpl(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
-        StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea, double tipsEarned,
-        DateTime? layoffDate = null)
-        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
+        StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea, double tipsEarned, Branch employerBranch,
+        Branch? managedBranch = null, DateTime? layoffDate = null)
+        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, employerBranch, managedBranch, layoffDate)
     {
         Vehicle = vehicle;
         DeliveryArea = deliveryArea;
@@ -73,7 +73,9 @@ public class FlexibleEmpl : AbstractEmployee, IDeliveryEmpl, IWaiterEmpl
             Vehicle,
             DeliveryArea,
             TipsEarned,
-            EmployeeType
+            EmployeeType,
+            EmployerBranch,
+            ManagedBranch
         };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.Employee;
 
 namespace Tests.model.Employee;
@@ -8,10 +9,12 @@ namespace Tests.model.Employee;
 public class WaiterTest
 {
     private Waiter _waiter = null!;
-    
+    private Branch _branch = null!;
+
     [SetUp]
     public void SetUp()
     {
+        _branch = new Branch(1, "ul.Hermana", "+485757575");
         _waiter = new Waiter(
             3,
             "Test Waiter",
@@ -21,7 +24,8 @@ public class WaiterTest
             DateTime.Today.AddHours(19),
             StatusEmpl.FullTime,
             false,
-            50.0
+            50.0,
+            _branch
         );
     }
 

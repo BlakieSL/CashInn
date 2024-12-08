@@ -1,4 +1,5 @@
 ﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.Employee;
 
 namespace Tests.model.Employee;
@@ -8,10 +9,12 @@ namespace Tests.model.Employee;
 public class FlexibleEmplTest
 {
     private FlexibleEmpl _flexibleEmpl = null!;
-    
+    private Branch _branch = null!;
+
     [SetUp]
     public void SetUp()
     {
+        _branch = new Branch(1, "ul.Hermana", "+485757575");
         _flexibleEmpl = new FlexibleEmpl(
             2,
             "Test Flexible Employee",
@@ -23,7 +26,8 @@ public class FlexibleEmplTest
             false,
             "Car",
             "Suburb Area",
-            150.0
+            150.0,
+            _branch
         );
     }
 

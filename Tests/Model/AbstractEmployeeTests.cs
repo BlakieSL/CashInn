@@ -1,4 +1,5 @@
 using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.Employee;
 
 namespace Tests.model;
@@ -8,6 +9,7 @@ public class AbstractEmployeeTests
 {
     private Cook _cook = null!;
     private Chef _chef = null!;
+    private Branch _branch = null!;
     private const string TestFilePath = "TestEmployees.json";
 
     [SetUp]
@@ -18,11 +20,12 @@ public class AbstractEmployeeTests
         {
             File.Delete(TestFilePath);
         }
-
         typeof(AbstractEmployee)
             .GetField("_filepath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
             .SetValue(null, TestFilePath);
 
+        _branch = new Branch(1, "ul.Hermana", "+485757575");
+        
         _cook = new Cook(
             1,
             "Test Cook",
@@ -34,7 +37,8 @@ public class AbstractEmployeeTests
             false,
             "Italian",
             5,
-            "Main Kitchen"
+            "Main Kitchen",
+            _branch
         );
 
         _chef = new Chef(
@@ -48,7 +52,8 @@ public class AbstractEmployeeTests
             true,
             "French",
             10,
-            2
+            2,
+            _branch
         );
 
     }

@@ -1,4 +1,5 @@
 ﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.Employee;
 
 namespace Tests.model.Employee;
@@ -8,10 +9,12 @@ namespace Tests.model.Employee;
 public class DeliveryEmplTest
 {
     private DeliveryEmpl _deliveryEmpl = null!;
-    
+    private Branch _branch = null!;
+
     [SetUp]
     public void SetUp()
     {
+        _branch = new Branch(1, "ul.Hermana", "+485757575");
         _deliveryEmpl = new DeliveryEmpl(
             1,
             "Test Delivery Employee",
@@ -22,7 +25,8 @@ public class DeliveryEmplTest
             StatusEmpl.FullTime,
             false,
             "Scooter",
-            "Downtown Area"
+            "Downtown Area",
+            _branch
         );
     }
 

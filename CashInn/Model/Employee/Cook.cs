@@ -5,7 +5,7 @@ namespace CashInn.Model.Employee;
 public class Cook : AbstractEmployee, IKitchenEmpl
 {
     public Chef? Manager { get; private set; }
-
+    public Kitchen? Kitchen { get; private set; }
     private string _specialtyCuisine;
     public string SpecialtyCuisine
     {
@@ -45,13 +45,15 @@ public class Cook : AbstractEmployee, IKitchenEmpl
     public Cook(
         int id, string name, double salary, DateTime hireDate, DateTime shiftStart,
         DateTime shiftEnd, StatusEmpl status, bool isBranchManager, string specialtyCuisine, 
-        int yearsOfExperience, string station, DateTime? layoffDate = null, Chef? manager = null)
-        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
+        int yearsOfExperience, string station, Branch employerBranch, Branch? managedBranch = null, 
+        DateTime? layoffDate = null, Chef? manager = null, Kitchen? kitchen = null)
+        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, employerBranch, managedBranch, layoffDate)
     {
         SpecialtyCuisine = specialtyCuisine;
         YearsOfExperience = yearsOfExperience;
         Station = station;
         if (manager != null) AddManager(manager);
+        if (kitchen != null) AddKitchen(kitchen);
 
         SaveEmployee(this);
     }
@@ -72,10 +74,12 @@ public class Cook : AbstractEmployee, IKitchenEmpl
             SpecialtyCuisine,
             YearsOfExperience,
             Station,
-            EmployeeType
+            EmployeeType,
+            EmployerBranch,
+            ManagedBranch
         };
     }
-
+    //--------------------------------------------
     public void AddManager(Chef manager)
     {
         ArgumentNullException.ThrowIfNull(manager);
@@ -106,5 +110,36 @@ public class Cook : AbstractEmployee, IKitchenEmpl
 
         RemoveManager();
         AddManager(newManager);
+    }
+    //--------------------------------------------
+    public void AddKitchen(Kitchen kitchen)
+    {
+        ArgumentNullException.ThrowIfNull(kitchen);
+
+        if (Kitchen == kitchen) return;
+
+        if (Kitchen != null)
+        {
+            throw new InvalidOperationException("Cook is already assigned to another Kitchen.");
+        }
+
+        Kitchen = kitchen;
+        kitchen.AddCookInternal(this);
+    }
+    
+    public void RemoveKitchen()
+    {
+        if (Kitchen == null) return;
+
+        var currentKitchen = Kitchen;
+        Kitchen = null;
+        currentKitchen.RemoveCookInternal(this);
+    }
+    public void UpdateKitchen(Kitchen newKitchen)
+    {
+        ArgumentNullException.ThrowIfNull(newKitchen);
+
+        RemoveKitchen();
+        AddKitchen(newKitchen);
     }
 }

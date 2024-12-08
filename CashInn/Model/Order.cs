@@ -5,6 +5,7 @@ namespace CashInn.Model;
 
 public class Order : ClassExtent<Order>
 {
+    public DeliveryEmpl? DeliveryEmpl { get; private set; }
     protected override string FilePath => ClassExtentFiles.OrdersFile;
     public int Id
     {
@@ -44,4 +45,36 @@ public class Order : ClassExtent<Order>
     }
     
     public Order(){}
+    
+    public void AddDeliveryEmployee(DeliveryEmpl delivery)
+    {
+        ArgumentNullException.ThrowIfNull(delivery);
+
+        if (DeliveryEmpl == delivery) return;
+
+        if (DeliveryEmpl != null)
+        {
+            throw new InvalidOperationException("Order is already assigned to another Delivery Person.");
+        }
+
+        DeliveryEmpl = delivery;
+        delivery.AddOrderInternal(this);
+    }
+
+    public void RemoveDeliveryEmployee()
+    {
+        if (DeliveryEmpl == null) return;
+
+        var currentDelivery = DeliveryEmpl;
+        DeliveryEmpl = null;
+        currentDelivery.RemoveOrderInternal(this);
+    }
+
+    public void UpdateDeliveryEmployee(DeliveryEmpl newDelivery)
+    {
+        ArgumentNullException.ThrowIfNull(newDelivery);
+
+        RemoveDeliveryEmployee();
+        AddDeliveryEmployee(newDelivery);
+    }
 }

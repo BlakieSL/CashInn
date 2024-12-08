@@ -5,6 +5,7 @@ namespace CashInn.Model;
 
 public class Table : ClassExtent<Table>
 {
+    public Waiter? Waiter { get; private set; }
     protected override string FilePath => ClassExtentFiles.TablesFile;
     public int Id 
     {
@@ -39,4 +40,36 @@ public class Table : ClassExtent<Table>
     }
     
     public Table(){}
+    
+    public void AddWaiter(Waiter waiter)
+    {
+        ArgumentNullException.ThrowIfNull(waiter);
+
+        if (Waiter == waiter) return;
+
+        if (Waiter != null)
+        {
+            throw new InvalidOperationException("Table is already assigned to another Waiter.");
+        }
+
+        Waiter = waiter;
+        waiter.AddTableInternal(this);
+    }
+
+    public void RemoveWaiter()
+    {
+        if (Waiter == null) return;
+
+        var currentWaiter = Waiter;
+        Waiter = null;
+        currentWaiter.RemoveTableInternal(this);
+    }
+
+    public void UpdateWaiter(Waiter newWaiter)
+    {
+        ArgumentNullException.ThrowIfNull(newWaiter);
+
+        RemoveWaiter();
+        AddWaiter(newWaiter);
+    }
 }

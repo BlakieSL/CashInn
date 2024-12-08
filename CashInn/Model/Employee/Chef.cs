@@ -6,6 +6,7 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 {
     private readonly List<Cook> _managedCooks = [];
     public IEnumerable<Cook> ManagedCooks => _managedCooks.AsReadOnly();
+    public Kitchen? ManagedKitchen { get; private set; }
     public override string EmployeeType => "Chef";
     private string _specialtyCuisine;
     public string SpecialtyCuisine
@@ -50,13 +51,18 @@ public class Chef : AbstractEmployee, IKitchenEmpl
 
     public Chef(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
         StatusEmpl status, bool isBranchManager, string specialtyCuisine, int experienceLevel, int michelinStars,
-        DateTime? layoffDate = null)
-        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, layoffDate)
+        Branch employerBranch, Branch? managedBranch = null, DateTime? layoffDate = null, Kitchen? kitchen = null)
+        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, employerBranch, managedBranch, layoffDate)
     {
         SpecialtyCuisine = specialtyCuisine;
         YearsOfExperience = experienceLevel;
         MichelinStars = michelinStars;
 
+        if (kitchen != null)
+        {
+            ManagedKitchen = kitchen;
+        }
+        
         SaveEmployee(this);
     }
 
@@ -76,7 +82,9 @@ public class Chef : AbstractEmployee, IKitchenEmpl
             SpecialtyCuisine,
             YearsOfExperience,
             MichelinStars,
-            EmployeeType
+            EmployeeType,
+            EmployerBranch,
+            ManagedBranch
         };
     }
 
@@ -84,14 +92,11 @@ public class Chef : AbstractEmployee, IKitchenEmpl
     {
         ArgumentNullException.ThrowIfNull(cook);
 
-        if (_managedCooks.Contains(cook)) return;
-
         if (cook.Manager != null && cook.Manager != this)
         {
             throw new InvalidOperationException("Cook is already managed by another chef");
         }
 
-        _managedCooks.Add(cook);
         cook.AddManager(this);
     }
 
@@ -100,7 +105,6 @@ public class Chef : AbstractEmployee, IKitchenEmpl
         ArgumentNullException.ThrowIfNull(cook);
         if (!_managedCooks.Contains(cook)) return;
 
-        _managedCooks.Remove(cook);
         cook.RemoveManager();
     }
 
@@ -127,5 +131,32 @@ public class Chef : AbstractEmployee, IKitchenEmpl
     internal void RemoveCookInternal(Cook cook)
     {
         _managedCooks.Remove(cook);
+    }
+    
+    //--------------------------------------------
+    public void AddKitchen(Kitchen? kitchen)
+    {
+        ArgumentNullException.ThrowIfNull(kitchen);
+
+        if (ManagedKitchen == kitchen) return;
+
+        kitchen.AddManager(this);
+    }
+
+    public void RemoveKitchen()
+    {
+        ArgumentNullException.ThrowIfNull(ManagedKitchen);
+        
+        ManagedKitchen.RemoveManager();
+    }
+
+    internal void AddKitchenInternal(Kitchen? kitchen)
+    {
+        ManagedKitchen ??= kitchen;
+    }
+    
+    internal void RemoveKitchenInternal()
+    {
+        ManagedKitchen = null;
     }
 }
