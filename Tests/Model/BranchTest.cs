@@ -108,40 +108,42 @@ public class BranchTest
         _branch.ContactInfo = "987-654-3210";
         Assert.That(_branch.ContactInfo, Is.EqualTo("987-654-3210"));
     }
+    
+    //--------------------------------------------
 
     [Test]
     public void AddEmployee_NullEmployee_ShouldThrowException()
     {
         Assert.Throws<ArgumentNullException>(() => _branch.AddEmployee(null!));
     }
-
-    //
-    // [Test]
-    // public void AddEmployee_ValidWaiter_ShouldAddWaiter()
-    // {
-    //     var newWaiter = new Waiter(
-    //         id: 4,
-    //         name: "John Doe",
-    //         salary: 2500.0,
-    //         hireDate: DateTime.Now.AddMonths(-6),
-    //         shiftStart: DateTime.Today.AddHours(11),
-    //         shiftEnd: DateTime.Today.AddHours(19),
-    //         status: StatusEmpl.FullTime,
-    //         isBranchManager: false,
-    //         tipsEarned: 300.0,
-    //         employerBranch: _branch
-    //     );
-    //
-    //      //the problem with the method AddEmployee
-    //     _branch.AddEmployee(newWaiter);
-    //     Assert.That(_branch.Employees, Contains.Item(newWaiter));
-    // }
+    
+    [Test]
+    public void Employee_Is_Created_And_Attached_To_Branch()
+    {
+        var newWaiter = new Waiter(
+            id: 4,
+            name: "John Doe",
+            salary: 2500.0,
+            hireDate: DateTime.Now.AddMonths(-6),
+            shiftStart: DateTime.Today.AddHours(11),
+            shiftEnd: DateTime.Today.AddHours(19),
+            status: StatusEmpl.FullTime,
+            isBranchManager: false,
+            tipsEarned: 300.0,
+            employerBranch: _branch
+        );
+        
+        Assert.That(_branch.Employees, Contains.Item(newWaiter));
+        Assert.IsTrue(Branch.GetAll().Any(b => b.Employees.Contains(newWaiter)));
+    }
 
     [Test]
     public void RemoveEmployee_ValidWaiter_ShouldRemoveWaiter()
     {
         _branch.RemoveEmployee(_waiter);
         Assert.That(_branch.Employees, Does.Not.Contain(_waiter));
+        //deleted from extent
+        Assert.That(AbstractEmployee.GetAll(), Does.Not.Contain(_waiter));
     }
 
     [Test]
@@ -172,14 +174,14 @@ public class BranchTest
         Assert.That(_branch.Manager, Is.Null);
     }
 //TODO fix this test so it will be done correctly
-    // [Test]
-    // public void Encapsulation_ShouldNotAllowDirectModification()
-    // {
-    //     _branch.Location = "Modified Location";
-    //     Assert.AreEqual("Modified Location", _branch.Location);
-    //
-    //     Assert.IsTrue(Branch.GetAll().Any(b => b.Location == "Modified Location"));
-    // }
+    [Test]
+    public void Encapsulation_ShouldNotAllowDirectModification()
+    {
+        _branch.Location = "Modified Location";
+        Assert.AreEqual("Modified Location", _branch.Location);
+    
+        Assert.IsTrue(Branch.GetAll().Any(b => b.Location == "Modified Location"));
+    }
 
     [Test]
     public void LoadExtent_ShouldRetrieveStoredBranchesCorrectly()

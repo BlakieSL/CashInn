@@ -119,6 +119,7 @@ public abstract class AbstractEmployee
             ManagedBranch = managedBranch;
         
         EmployerBranch = employerBranch;
+        employerBranch.AddEmployeeInternal(this);
     }
 
     public static void SaveExtent()

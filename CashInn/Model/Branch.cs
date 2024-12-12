@@ -9,6 +9,7 @@ public class Branch : ClassExtent<Branch>
     public IEnumerable<AbstractEmployee> Employees => _employees.AsReadOnly();
     public AbstractEmployee? Manager { get; private set; }
     protected override string FilePath => ClassExtentFiles.BranchesFile;
+    //need to get rid of ids
     public int Id 
     {
         get => _id;
@@ -17,6 +18,8 @@ public class Branch : ClassExtent<Branch>
             if (value < 0)
                 throw new ArgumentException("Id cannot be less than 0", nameof(Id));
             _id = value;
+            
+            UpdateInstance(this);
         }
     }
     private int _id;
@@ -30,6 +33,8 @@ public class Branch : ClassExtent<Branch>
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Location cannot be null or empty", nameof(Location));
             _location = value;
+            
+            UpdateInstance(this);
         }
     }
 
@@ -42,6 +47,8 @@ public class Branch : ClassExtent<Branch>
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Contact info cannot be null or empty", nameof(ContactInfo));
             _contactInfo = value;
+            
+            UpdateInstance(this);
         }
     }
     
@@ -115,5 +122,16 @@ public class Branch : ClassExtent<Branch>
     internal void RemoveManagerInternal()
     {
         Manager = null;
+    }
+    
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Branch other) return false;
+        return Id == other.Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
     }
 }
