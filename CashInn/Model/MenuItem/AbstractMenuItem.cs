@@ -75,7 +75,7 @@ public abstract class AbstractMenuItem
     public bool Available { get; set; }
     
     protected AbstractMenuItem(int id, string name, double price, string description, string dietaryInformation,
-        bool available, Category category)
+        bool available)
     {
         Id = id;
         Name = name;
@@ -83,7 +83,6 @@ public abstract class AbstractMenuItem
         Description = description;
         DietaryInformation = dietaryInformation;
         Available = available;
-        AddCategory(category);
     }
     public static void SaveExtent()
     {

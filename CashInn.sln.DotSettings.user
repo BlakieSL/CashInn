@@ -8,6 +8,7 @@
     &lt;TestAncestor&gt;&#xD;
       &lt;TestId&gt;NUnit3x::51269017-6A33-44D8-9351-7AB51CDB51B8::net8.0::Tests.model.Employee.ChefCookAssociationTests&lt;/TestId&gt;&#xD;
       &lt;TestId&gt;NUnit3x::51269017-6A33-44D8-9351-7AB51CDB51B8::net8.0::Tests.model.KitchenTest&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;NUnit3x::51269017-6A33-44D8-9351-7AB51CDB51B8::net8.0::Tests.Association.CategoryMenuItemAssociationTests&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
     &lt;ProjectFile&gt;51269017-6A33-44D8-9351-7AB51CDB51B8/d:Model/f:TableTest.cs&lt;/ProjectFile&gt;&#xD;
   &lt;/Or&gt;&#xD;
