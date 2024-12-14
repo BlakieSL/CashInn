@@ -1,4 +1,5 @@
-﻿using CashInn.Model.MenuItem;
+﻿using CashInn.Model;
+using CashInn.Model.MenuItem;
 
 namespace Tests.model.MenuItem;
 
@@ -11,6 +12,7 @@ public class SpecialItemTest
     [SetUp]
     public void SetUp()
     {
+        Category category = new Category(1, "food");
         _specialItem = new SpecialItem(
             1,
             "Test Special Item",
@@ -18,8 +20,9 @@ public class SpecialItemTest
             "A special test item",
             "Contains nuts",
             true,
-            DateTime.Now.AddDays(-1),  // ValidFrom in the past
-            DateTime.Now.AddDays(1)    // ValidTo in the future
+            DateTime.Now.AddDays(-1),
+            DateTime.Now.AddDays(1),
+            category
         );
     }
 

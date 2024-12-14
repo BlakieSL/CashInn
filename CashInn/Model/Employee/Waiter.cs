@@ -94,5 +94,4 @@ public class Waiter : AbstractEmployee, IWaiterEmpl
     {
         _assignedTables.Remove(table);
     }
-    //--------------------------------------------
 }

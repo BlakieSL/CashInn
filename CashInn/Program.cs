@@ -46,8 +46,9 @@ app.MapGet("/create-payments", () =>
 
 app.MapGet("/create-menuitems", () =>
 {
-    var item1 = new DefaultItem(1, "burger", 23.00, "Good burger", "no nothin", true, ServingSize.Small);
-    var item2 = new SpecialItem(1, "burger special", 23.00, "Good burger", "no nothin", true, DateTime.Today.AddDays(1), DateTime.Today.AddDays(10));
+    Category category = new Category(1, "food");
+    var item1 = new DefaultItem(1, "burger", 23.00, "Good burger", "no nothin", true, ServingSize.Small, category);
+    var item2 = new SpecialItem(1, "burger special", 23.00, "Good burger", "no nothin", true, DateTime.Today.AddDays(1), DateTime.Today.AddDays(10), category);
     AbstractMenuItem.SaveExtent();
     return "Items created and saved!";
 });

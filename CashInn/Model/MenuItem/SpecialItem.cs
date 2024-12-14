@@ -27,8 +27,8 @@ public class SpecialItem : AbstractMenuItem
     private DateTime _validTo;
     public override string ItemType => "Special";
     public SpecialItem(int id, string name, double price, string description, string dietaryInformation, bool available,
-        DateTime validFrom, DateTime validTo)
-        : base(id, name, price, description, dietaryInformation, available)
+        DateTime validFrom, DateTime validTo, Category category)
+        : base(id, name, price, description, dietaryInformation, available, category)
     {
         ValidFrom = validFrom;
         ValidTo = validTo;
@@ -48,6 +48,7 @@ public class SpecialItem : AbstractMenuItem
             Available,
             ValidFrom,
             ValidTo,
+            Category,
             ItemType
         };
     }

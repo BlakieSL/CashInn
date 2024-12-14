@@ -108,8 +108,13 @@ public abstract class AbstractMenuItem
             bool available = itemData.GetProperty("Available").GetBoolean();
 
             string itemType = itemData.GetProperty("ItemType").GetString();
+            Category category = JsonSerializer.Deserialize<Category>(itemData.GetProperty("Category").GetRawText());
+            if (category == null)
+            {
+                throw new InvalidOperationException("Category cannot be null.");
+            }
             
-            AbstractMenuItem abstractEmployee;
+            AbstractMenuItem abstractMenuItem;
             if (itemType == "Default")
             {
                 var servingSizeString = itemData.GetProperty("ServingSize").GetString();
@@ -122,14 +127,15 @@ public abstract class AbstractMenuItem
                     throw new ArgumentException($"Invalid status value: {servingSizeString}");
                 }
                 
-                abstractEmployee = new DefaultItem(
+                abstractMenuItem = new DefaultItem(
                     id,
                     name,
                     price,
                     description,
                     dietaryInformation,
                     available,
-                    servingSize
+                    servingSize,
+                    category
                 );
             }
             else if (itemType == "Special")
@@ -145,7 +151,7 @@ public abstract class AbstractMenuItem
                     validTo = validToProperty.GetDateTime();
                 }
                 
-                abstractEmployee = new SpecialItem(
+                abstractMenuItem = new SpecialItem(
                     id,
                     name,
                     price,
@@ -153,7 +159,8 @@ public abstract class AbstractMenuItem
                     dietaryInformation,
                     available,
                     validFrom.Value,
-                    validTo.Value
+                    validTo.Value,
+                    category
                 );
             } 
             else

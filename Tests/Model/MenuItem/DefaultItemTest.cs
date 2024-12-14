@@ -1,4 +1,5 @@
 ﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.MenuItem;
 
 namespace Tests.model.MenuItem;
@@ -12,6 +13,7 @@ private DefaultItem _defaultItem = null!;
     [SetUp]
     public void SetUp()
     {
+        Category category = new Category(1, "food");
         _defaultItem = new DefaultItem(
             1,
             "Test Item",
@@ -19,7 +21,8 @@ private DefaultItem _defaultItem = null!;
             "A delicious test item",
             "Contains gluten",
             true,
-            ServingSize.Medium
+            ServingSize.Medium,
+            category
         );
     }
 

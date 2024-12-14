@@ -27,6 +27,7 @@ public class DefaultItem : AbstractMenuItem
             DietaryInformation,
             Available,
             ServingSize,
+            Category,
             ItemType
         };
     }
