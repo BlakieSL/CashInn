@@ -9,6 +9,8 @@ public abstract class AbstractMenuItem
 {
     private static readonly List<AbstractMenuItem> MenuItems = [];
     private static string _filepath = ClassExtentFiles.MenuItemFile;
+
+    public Category Category { get; private set; }
     public abstract string ItemType { get; }
     public int Id 
     {
@@ -72,7 +74,8 @@ public abstract class AbstractMenuItem
 
     public bool Available { get; set; }
     
-    protected AbstractMenuItem(int id, string name, double price, string description, string dietaryInformation, bool available)
+    protected AbstractMenuItem(int id, string name, double price, string description, string dietaryInformation,
+        bool available, Category category)
     {
         Id = id;
         Name = name;
@@ -80,6 +83,7 @@ public abstract class AbstractMenuItem
         Description = description;
         DietaryInformation = dietaryInformation;
         Available = available;
+        AddCategory(category);
     }
     public static void SaveExtent()
     {
@@ -102,6 +106,7 @@ public abstract class AbstractMenuItem
             string description = itemData.GetProperty("Description").GetString();
             string dietaryInformation = itemData.GetProperty("DietaryInformation").GetString();
             bool available = itemData.GetProperty("Available").GetBoolean();
+
             string itemType = itemData.GetProperty("ItemType").GetString();
             
             AbstractMenuItem abstractEmployee;
@@ -167,5 +172,37 @@ public abstract class AbstractMenuItem
     public static ICollection<AbstractMenuItem> GetAll()
     {
         return MenuItems.ToImmutableList();
+    }
+
+    public void AddCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+
+        if (Category == category) return;
+
+        if (Category != null)
+        {
+            throw new InvalidOperationException("Menu item is already in another category.");
+        }
+
+        Category = category;
+        category.AddMenuItemInternal(this);
+    }
+
+    public void RemoveCategory()
+    {
+        if(Category == null) return;
+
+        var currentCategory = Category;
+        Category = null;
+        currentCategory.RemoveMenuItemInternal(this);
+    }
+
+    public void UpdateCategory(Category newCategory)
+    {
+        ArgumentNullException.ThrowIfNull(newCategory);
+
+        RemoveCategory();
+        AddCategory(newCategory);
     }
 }

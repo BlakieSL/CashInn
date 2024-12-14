@@ -6,8 +6,8 @@ public class DefaultItem : AbstractMenuItem
 {
     public ServingSize ServingSize { get; set; }
     public DefaultItem(int id, string name, double price, string description, string dietaryInformation, bool available,
-        ServingSize servingSize) 
-        : base(id, name, price, description, dietaryInformation, available)
+        ServingSize servingSize, Category category)
+        : base(id, name, price, description, dietaryInformation, available, category)
     {
         ServingSize = servingSize;
         
