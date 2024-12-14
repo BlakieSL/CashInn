@@ -24,7 +24,8 @@ public class CategoryMenuItemAssociationTests
             "Delicious grilled chicken with herbs",
             "High Protein",
             true,
-            ServingSize.Medium
+            ServingSize.Medium,
+            _category
         );
     }
 
@@ -44,9 +45,8 @@ public class CategoryMenuItemAssociationTests
     public void AddMenuItem_WhenMenuItemAlreadyAssignedToAnotherCategory_ShouldThrowException()
     {
         var anotherCategory = new Category(2, "Special Dishes");
-        anotherCategory.AddMenuItem(_menuItem);
 
-        Assert.Throws<ArgumentException>(() => _category.AddMenuItem(_menuItem));
+        Assert.Throws<ArgumentException>(() => anotherCategory.AddMenuItem(_menuItem));
     }
 
     [Test]
@@ -84,7 +84,8 @@ public class CategoryMenuItemAssociationTests
             "Grilled steak with sides",
             "High Protein",
             true,
-            ServingSize.Small
+            ServingSize.Small,
+            _category
         );
 
         _category.AddMenuItem(_menuItem);
@@ -109,10 +110,11 @@ public class CategoryMenuItemAssociationTests
             "Grilled steak with sides",
             "High Protein",
             true,
-            ServingSize.Small
+            ServingSize.Small,
+            _category
         );
 
-        Assert.Throws<InvalidOperationException>(() => _category.UpdateMenuItem(_menuItem, newMenuItem));
+        Assert.DoesNotThrow(() => _category.UpdateMenuItem(_menuItem, newMenuItem));
     }
 
     [Test]
@@ -131,9 +133,7 @@ public class CategoryMenuItemAssociationTests
     public void AddCategory_WhenMenuItemAlreadyInAnotherCategory_ShouldThrowException()
     {
         var anotherCategory = new Category(2, "Special Dishes");
-        _menuItem.AddCategory(anotherCategory);
-
-        Assert.Throws<InvalidOperationException>(() => _menuItem.AddCategory(_category));
+        Assert.Throws<InvalidOperationException>(() => _menuItem.AddCategory(anotherCategory));
     }
 
     [Test]

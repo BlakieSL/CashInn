@@ -1,4 +1,5 @@
-﻿using CashInn.Helper;
+﻿using System.Text.Json.Serialization;
+using CashInn.Helper;
 using CashInn.Model.Employee;
 
 namespace CashInn.Model;
@@ -6,7 +7,9 @@ namespace CashInn.Model;
 public class Branch : ClassExtent<Branch>
 {
     private readonly List<AbstractEmployee> _employees = [];
+    [JsonIgnore]
     public IEnumerable<AbstractEmployee> Employees => _employees.AsReadOnly();
+    [JsonIgnore]
     public AbstractEmployee? Manager { get; private set; }
     protected override string FilePath => ClassExtentFiles.BranchesFile;
     //need to get rid of ids
@@ -72,7 +75,7 @@ public class Branch : ClassExtent<Branch>
         {
             throw new InvalidOperationException("Employee is already employed by another Branch");
         }
-        //Problem with this method
+        
         employee.AddEmployerBranch(this);
     }
     
@@ -90,11 +93,15 @@ public class Branch : ClassExtent<Branch>
         {
             _employees.Add(employee);
         }
+        
+        UpdateInstance(this);
     }
     
     internal void RemoveEmployeeInternal(AbstractEmployee employee)
     {
         _employees.Remove(employee);
+        
+        UpdateInstance(this);
     }
     
     public void AddManager(AbstractEmployee employee)
@@ -117,11 +124,15 @@ public class Branch : ClassExtent<Branch>
     internal void AddManagerInternal(AbstractEmployee employee)
     {
         Manager = employee;
+        
+        UpdateInstance(this);
     }
     
     internal void RemoveManagerInternal()
     {
         Manager = null;
+        
+        UpdateInstance(this);
     }
     
     public override bool Equals(object? obj)
@@ -134,4 +145,14 @@ public class Branch : ClassExtent<Branch>
     {
         return Id.GetHashCode();
     }
+
+    // public object ToSerializable()
+    // {
+    //     return new
+    //     {
+    //         Id,
+    //         Location,
+    //         ContactInfo
+    //     };
+    // }
 }

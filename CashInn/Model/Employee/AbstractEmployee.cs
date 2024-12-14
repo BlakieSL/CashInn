@@ -225,7 +225,6 @@ public abstract class AbstractEmployee
     public void AddEmployerBranch(Branch branch)
     {
         ArgumentNullException.ThrowIfNull(branch);
-        //Problem with this moment in the method while in method Branch.AddEmployee()
         if (EmployerBranch == branch) return;
 
         if (EmployerBranch != null)

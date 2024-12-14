@@ -2,7 +2,6 @@
 using System.Text.Json;
 using CashInn.Enum;
 using CashInn.Helper;
-using CashInn.Model.Employee;
 
 namespace CashInn.Model.MenuItem;
 public abstract class AbstractMenuItem
@@ -75,7 +74,7 @@ public abstract class AbstractMenuItem
     public bool Available { get; set; }
     
     protected AbstractMenuItem(int id, string name, double price, string description, string dietaryInformation,
-        bool available)
+        bool available, Category category)
     {
         Id = id;
         Name = name;
@@ -83,6 +82,8 @@ public abstract class AbstractMenuItem
         Description = description;
         DietaryInformation = dietaryInformation;
         Available = available;
+        
+        AddCategory(category);
     }
     public static void SaveExtent()
     {
@@ -197,7 +198,7 @@ public abstract class AbstractMenuItem
 
     public void RemoveCategory()
     {
-        if(Category == null) return;
+        if (Category == null) return;
 
         var currentCategory = Category;
         Category = null;

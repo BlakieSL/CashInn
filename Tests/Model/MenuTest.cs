@@ -52,6 +52,7 @@ public class MenuTest
     [Test]
     public void LoadExtent_ShouldRetrieveStoredMenusCorrectly()
     {
+        Menu.ClearExtent();
         var menu1 = new Menu(1, DateTime.Now.AddDays(-1));
         var menu2 = new Menu(2, DateTime.Now.AddDays(-2));
 

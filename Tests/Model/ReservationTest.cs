@@ -51,6 +51,8 @@ public class ReservationTest
     [Test]
     public void LoadExtent_ShouldRetrieveStoredReservationsCorrectly()
     {
+        Reservation.ClearExtent();
+
         var reservation1 = new Reservation(1, 4);
         var reservation2 = new Reservation(2, 6);
 
