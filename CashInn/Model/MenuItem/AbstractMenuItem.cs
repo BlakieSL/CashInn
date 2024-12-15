@@ -8,6 +8,12 @@ public abstract class AbstractMenuItem
 {
     private static readonly List<AbstractMenuItem> MenuItems = [];
     private static string _filepath = ClassExtentFiles.MenuItemFile;
+
+    private readonly List<AbstractMenuItem> _relatedItems = [];
+    public IEnumerable<AbstractMenuItem> RelatedItems => _relatedItems.AsReadOnly();
+    private readonly List<AbstractMenuItem> _referencingItems = [];
+    public IEnumerable<AbstractMenuItem> ReferencingItems => _referencingItems.AsReadOnly();
+
     private readonly List<Ingredient> _ingredients = [];
     public IEnumerable<Ingredient> Ingredients => _ingredients.AsReadOnly();
     public Category Category { get; private set; }
@@ -245,4 +251,30 @@ public abstract class AbstractMenuItem
         _ingredients.Remove(ingredient);
     }
 
+    public void AddRelatedItem(AbstractMenuItem relatedItem)
+    {
+        ArgumentNullException.ThrowIfNull(relatedItem);
+
+        if (relatedItem == this)
+            throw new InvalidOperationException("An item cannot be related to itself.");
+
+        if (_relatedItems.Contains(relatedItem)) return;
+
+        _relatedItems.Add(relatedItem);
+
+        if (!relatedItem._referencingItems.Contains(this))
+        {
+            relatedItem._referencingItems.Add(this);
+        }
+    }
+
+    public void RemoveRelatedItem(AbstractMenuItem relatedItem)
+    {
+        ArgumentNullException.ThrowIfNull(relatedItem);
+
+        if (!_relatedItems.Contains(relatedItem)) return;
+        _relatedItems.Remove(relatedItem);
+
+        relatedItem._referencingItems.Remove(this);
+    }
 }
