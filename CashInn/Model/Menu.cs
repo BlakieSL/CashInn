@@ -1,13 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 using CashInn.Helper;
-using CashInn.Model.Employee;
 
 namespace CashInn.Model;
 
 public class Menu : ClassExtent<Menu>
 {
     protected override string FilePath => ClassExtentFiles.MenusFile;
-    public int Id 
+    public readonly List<Category> _categories = [];
+    public IEnumerable<Category> Categories => _categories.AsReadOnly();
+    public int Id
     {
         get => _id;
         set
@@ -34,9 +35,42 @@ public class Menu : ClassExtent<Menu>
     {
         Id = id;
         DateUpdated = dateUpdated;
-        
+
         AddInstance(this);
     }
-    
+
     public Menu(){}
+
+    public void AddCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+
+        if (_categories.Contains(category)) return;
+
+        _categories.Add(category);
+        category.AddMenuInternal(this);
+    }
+
+    public void RemoveCategory(Category category)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+
+        if(!_categories.Contains(category)) return;
+
+        _categories.Remove(category);
+        category.RemoveMenuInternal(this);
+    }
+
+    internal void AddCategoryInternal(Category category)
+    {
+        if (!_categories.Contains(category))
+        {
+            _categories.Add(category);
+        }
+    }
+
+    internal void RemoveCategoryInternal(Category category)
+    {
+        _categories.Remove(category);
+    }
 }

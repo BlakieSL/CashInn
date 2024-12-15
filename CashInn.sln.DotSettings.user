@@ -1,9 +1,9 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AAssert_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2024_002E2_003Fresharper_002Dhost_003FSourcesCache_003F46a322d26154b982566e1817203e5452c91223f93b0e392d9c5b4806696fdc1_003FAssert_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8141b50b_002D90ac_002D4943_002Db295_002Df62de29c0c5d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AbstractEmployeeTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8141b50b_002D90ac_002D4943_002Db295_002Df62de29c0c5d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AbstractEmployeeTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e8de7581_002Df662_002D4a78_002D8261_002Ddc1f75d772ef/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ChefCookAssociationTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e8de7581_002Df662_002D4a78_002D8261_002Ddc1f75d772ef/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ChefCookAssociationTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Or&gt;&#xD;
     &lt;TestAncestor&gt;&#xD;
       &lt;TestId&gt;NUnit3x::51269017-6A33-44D8-9351-7AB51CDB51B8::net8.0::Tests.model.Employee.ChefCookAssociationTests&lt;/TestId&gt;&#xD;
@@ -11,5 +11,6 @@
       &lt;TestId&gt;NUnit3x::51269017-6A33-44D8-9351-7AB51CDB51B8::net8.0::Tests.Association.CategoryMenuItemAssociationTests&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
     &lt;ProjectFile&gt;51269017-6A33-44D8-9351-7AB51CDB51B8/d:Model/f:TableTest.cs&lt;/ProjectFile&gt;&#xD;
+    &lt;ProjectFile&gt;51269017-6A33-44D8-9351-7AB51CDB51B8/d:Association/f:CategoryMenuAssociationTest.cs&lt;/ProjectFile&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

@@ -9,6 +9,8 @@ public class Category : ClassExtent<Category>
     protected override string FilePath => ClassExtentFiles.CategoriesFile;
     private readonly List<AbstractMenuItem> _menuItems = [];
     public IEnumerable<AbstractMenuItem> MenuItems => _menuItems.AsReadOnly();
+    public readonly List<Menu> _menus = [];
+    public IEnumerable<Menu> Menus => _menus.AsReadOnly();
     public int Id
     {
         get => _id;
@@ -86,5 +88,39 @@ public class Category : ClassExtent<Category>
     internal void RemoveMenuItemInternal(AbstractMenuItem menuItem)
     {
             _menuItems.Remove(menuItem);
+    }
+
+
+    public void AddMenu(Menu menu)
+    {
+        ArgumentNullException.ThrowIfNull(menu);
+
+        if (_menus.Contains(menu)) return;
+
+        _menus.Add(menu);
+        menu.AddCategoryInternal(this);
+    }
+
+    public void RemoveMenu(Menu menu)
+    {
+        ArgumentNullException.ThrowIfNull(menu);
+
+        if (!_menus.Contains(menu)) return;
+
+        _menus.Remove(menu);
+        menu.RemoveCategoryInternal(this);
+    }
+
+    internal void AddMenuInternal(Menu menu)
+    {
+        if (!_menus.Contains(menu))
+        {
+            _menus.Add(menu);
+        }
+    }
+
+    internal void RemoveMenuInternal(Menu menu)
+    {
+        _menus.Remove(menu);
     }
 }
