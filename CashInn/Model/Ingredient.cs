@@ -1,12 +1,15 @@
 ﻿using CashInn.Helper;
 using CashInn.Model.Employee;
+using CashInn.Model.MenuItem;
 
 namespace CashInn.Model;
 
 public class Ingredient : ClassExtent<Ingredient>
 {
     protected override string FilePath => ClassExtentFiles.IngredientsFile;
-    public int Id 
+    private readonly List<AbstractMenuItem> _menuItems = [];
+    public IEnumerable<AbstractMenuItem> MenuItems => _menuItems.AsReadOnly();
+    public int Id
     {
         get => _id;
         set
@@ -55,4 +58,34 @@ public class Ingredient : ClassExtent<Ingredient>
     }
     
     public Ingredient(){}
+
+    public void AddMenuItem(AbstractMenuItem menuItem)
+    {
+        ArgumentNullException.ThrowIfNull(menuItem);
+
+        if (_menuItems.Contains(menuItem)) return;
+
+        _menuItems.Add(menuItem);
+        menuItem.AddIngredientInternal(this);
+    }
+
+    public void RemoveMenuItem(AbstractMenuItem menuItem)
+    {
+        ArgumentNullException.ThrowIfNull(menuItem);
+        if (!_menuItems.Contains(menuItem)) return;
+
+        _menuItems.Remove(menuItem);
+        menuItem.RemoveIngredientInternal(this);
+    }
+
+    public void AddMenuItemInternal(AbstractMenuItem menuItem)
+    {
+        if(!_menuItems.Contains(menuItem))
+            _menuItems.Add(menuItem);
+    }
+
+    public void RemoveMenuItemInternal(AbstractMenuItem menuItem)
+    {
+        _menuItems.Remove(menuItem);
+    }
 }

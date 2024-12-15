@@ -8,7 +8,8 @@ public abstract class AbstractMenuItem
 {
     private static readonly List<AbstractMenuItem> MenuItems = [];
     private static string _filepath = ClassExtentFiles.MenuItemFile;
-
+    private readonly List<Ingredient> _ingredients = [];
+    public IEnumerable<Ingredient> Ingredients => _ingredients.AsReadOnly();
     public Category Category { get; private set; }
     public abstract string ItemType { get; }
     public int Id 
@@ -212,4 +213,36 @@ public abstract class AbstractMenuItem
         RemoveCategory();
         AddCategory(newCategory);
     }
+
+    public void AddIngredient(Ingredient ingredient)
+    {
+        ArgumentNullException.ThrowIfNull(ingredient);
+
+        if (_ingredients.Contains(ingredient)) return;
+
+        _ingredients.Add(ingredient);
+        ingredient.AddMenuItemInternal(this);
+    }
+
+    public void RemoveIngredient(Ingredient ingredient)
+    {
+        ArgumentNullException.ThrowIfNull(ingredient);
+
+        if (!_ingredients.Contains(ingredient)) return;
+
+        _ingredients.Remove(ingredient);
+        ingredient.RemoveMenuItemInternal(this);
+    }
+
+    internal void AddIngredientInternal(Ingredient ingredient)
+    {
+        if(!_ingredients.Contains(ingredient))
+            _ingredients.Add(ingredient);
+    }
+
+    internal void RemoveIngredientInternal(Ingredient ingredient)
+    {
+        _ingredients.Remove(ingredient);
+    }
+
 }
