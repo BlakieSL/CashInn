@@ -113,5 +113,96 @@ namespace Tests.Association
                 Assert.That(_item2.ReferencingItems, Does.Not.Contain(_item1));
             });
         }
+
+        [Test]
+        public void AddReferencingItem_ShouldAddBidirectionalRelationship()
+        {
+            _item1.AddReferencingItem(_item2);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_item1.ReferencingItems, Contains.Item(_item2));
+                Assert.That(_item2.RelatedItems, Contains.Item(_item1));
+            });
+        }
+
+        [Test]
+        public void AddReferencingItem_WhenItemIsSelf_ShouldThrowException()
+        {
+            Assert.Throws<InvalidOperationException>(() => _item1.AddReferencingItem(_item1));
+        }
+
+        [Test]
+        public void AddReferencingItem_WhenAlreadyReferenced_ShouldNotDuplicate()
+        {
+            _item1.AddReferencingItem(_item2);
+            _item1.AddReferencingItem(_item2);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_item1.ReferencingItems.Count(), Is.EqualTo(1));
+                Assert.That(_item2.RelatedItems.Count(), Is.EqualTo(1));
+            });
+        }
+
+        [Test]
+        public void RemoveReferencingItem_ShouldRemoveBidirectionalRelationship()
+        {
+            _item1.AddReferencingItem(_item2);
+            _item1.RemoveReferencingItem(_item2);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_item1.ReferencingItems, Does.Not.Contain(_item2));
+                Assert.That(_item2.RelatedItems, Does.Not.Contain(_item1));
+            });
+        }
+
+        [Test]
+        public void RemoveReferencingItem_WhenNotReferenced_ShouldNotThrow()
+        {
+            Assert.DoesNotThrow(() => _item1.RemoveReferencingItem(_item2));
+        }
+
+        [Test]
+        public void AddAndRemoveMultipleReferencingItems_ShouldMaintainConsistency()
+        {
+            _item1.AddReferencingItem(_item2);
+            _item1.AddReferencingItem(_item3);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_item1.ReferencingItems, Contains.Item(_item2));
+                Assert.That(_item1.ReferencingItems, Contains.Item(_item3));
+                Assert.That(_item2.RelatedItems, Contains.Item(_item1));
+                Assert.That(_item3.RelatedItems, Contains.Item(_item1));
+            });
+
+            _item1.RemoveReferencingItem(_item2);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_item1.ReferencingItems, Does.Not.Contain(_item2));
+                Assert.That(_item2.RelatedItems, Does.Not.Contain(_item1));
+                Assert.That(_item1.ReferencingItems, Contains.Item(_item3));
+                Assert.That(_item3.RelatedItems, Contains.Item(_item1));
+            });
+        }
+
+        [Test]
+        public void RemoveReferencingItem_ShouldNotAffectOtherRelationships()
+        {
+            _item1.AddReferencingItem(_item2);
+            _item1.AddReferencingItem(_item3);
+
+            _item1.RemoveReferencingItem(_item2);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_item1.ReferencingItems, Contains.Item(_item3));
+                Assert.That(_item3.RelatedItems, Contains.Item(_item1));
+                Assert.That(_item2.RelatedItems, Does.Not.Contain(_item1));
+            });
+        }
     }
 }

@@ -261,11 +261,7 @@ public abstract class AbstractMenuItem
         if (_relatedItems.Contains(relatedItem)) return;
 
         _relatedItems.Add(relatedItem);
-
-        if (!relatedItem._referencingItems.Contains(this))
-        {
-            relatedItem._referencingItems.Add(this);
-        }
+        relatedItem.AddReferencingItemInternal(this);
     }
 
     public void RemoveRelatedItem(AbstractMenuItem relatedItem)
@@ -275,6 +271,51 @@ public abstract class AbstractMenuItem
         if (!_relatedItems.Contains(relatedItem)) return;
         _relatedItems.Remove(relatedItem);
 
-        relatedItem._referencingItems.Remove(this);
+        relatedItem.RemoveReferencingItemInternal(this);
+    }
+
+    internal void AddRelatedItemInternal(AbstractMenuItem relatedItem)
+    {
+        if (!_relatedItems.Contains(relatedItem))
+        {
+            _relatedItems.Add(relatedItem);
+        }
+    }
+
+    internal void RemoveRelatedItemInternal(AbstractMenuItem relatedItem)
+    {
+        _relatedItems.Remove(relatedItem);
+    }
+
+    public void AddReferencingItem(AbstractMenuItem referencingItem)
+    {
+        ArgumentNullException.ThrowIfNull(referencingItem);
+        if (referencingItem == this) throw new InvalidOperationException("An item cannot reference itself.");
+
+        if (_referencingItems.Contains(referencingItem)) return;
+
+        AddReferencingItemInternal(referencingItem);
+        referencingItem.AddRelatedItemInternal(this);
+    }
+
+    public void RemoveReferencingItem(AbstractMenuItem referencingItem)
+    {
+        ArgumentNullException.ThrowIfNull(referencingItem);
+
+        if (!_referencingItems.Contains(referencingItem)) return;
+
+        RemoveReferencingItemInternal(referencingItem);
+        referencingItem.RemoveRelatedItemInternal(this);
+    }
+
+    internal void AddReferencingItemInternal(AbstractMenuItem referencingItem)
+    {
+        if (!_referencingItems.Contains(referencingItem))
+            _referencingItems.Add(referencingItem);
+    }
+
+    internal void RemoveReferencingItemInternal(AbstractMenuItem referencingItem)
+    {
+        _referencingItems.Remove(referencingItem);
     }
 }
