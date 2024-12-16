@@ -41,7 +41,8 @@ public class Kitchen : ClassExtent<Kitchen>
     {
         Id = id;
         Equipment = equipment;
-        AddManager(manager);
+        if (manager != null) 
+            AddManager(manager);
         if (cookList.Count == 0)
             throw new ArgumentException("At least one cook must be in cookList", nameof(cookList));
         _cooks = cookList;

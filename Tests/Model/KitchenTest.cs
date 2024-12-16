@@ -85,6 +85,7 @@ public class KitchenTest
     [Test]
     public void LoadExtent_ShouldRetrieveStoredKitchensCorrectly()
     {
+        Kitchen.ClearExtent();
         var kitchen1 = new Kitchen(1, new List<string> { "Oven" }, new List<Cook> {_cook});
         var kitchen2 = new Kitchen(2, new List<string> { "Stove" }, new List<Cook> {_cook});
 
