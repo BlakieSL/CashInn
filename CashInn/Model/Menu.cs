@@ -8,6 +8,7 @@ public class Menu : ClassExtent<Menu>
     protected override string FilePath => ClassExtentFiles.MenusFile;
     public readonly List<Category> _categories = [];
     public IEnumerable<Category> Categories => _categories.AsReadOnly();
+    public Branch Branch { get; private set; }
     public int Id
     {
         get => _id;
@@ -31,12 +32,15 @@ public class Menu : ClassExtent<Menu>
             _dateUpdated = value;
         }
     }
-    public Menu(int id, DateTime dateUpdated)
+    public Menu(int id, DateTime dateUpdated, Branch branch)
     {
+        if (branch == null) throw new ArgumentNullException(nameof(branch));
         Id = id;
         DateUpdated = dateUpdated;
 
         AddInstance(this);
+        
+        SetBranch(branch);
     }
 
     public Menu(){}
@@ -72,5 +76,19 @@ public class Menu : ClassExtent<Menu>
     internal void RemoveCategoryInternal(Category category)
     {
         _categories.Remove(category);
+    }
+    
+    public void SetBranch(Branch branch)
+    {
+        ArgumentNullException.ThrowIfNull(branch);
+        if (Branch == branch) return;
+
+        if (Branch != null)
+        {
+            throw new InvalidOperationException("Menu is already assigned to another Branch");
+        }
+
+        Branch = branch;
+        branch.AddMenuInternal(this);
     }
 }

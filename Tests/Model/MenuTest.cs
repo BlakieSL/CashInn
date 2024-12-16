@@ -8,11 +8,12 @@ public class MenuTest
 {
     private Menu _menu = null!;
     private const string TestFilePath = "Menus.json";
+    Branch _branch = new Branch(1, "loc", "contact");
 
     [SetUp]
     public void SetUp()
     {
-        _menu = new Menu(1, DateTime.Now);
+        _menu = new Menu(1, DateTime.Now, _branch);
         if (File.Exists(TestFilePath))
         {
             File.Delete(TestFilePath);
@@ -53,8 +54,8 @@ public class MenuTest
     public void LoadExtent_ShouldRetrieveStoredMenusCorrectly()
     {
         Menu.ClearExtent();
-        var menu1 = new Menu(1, DateTime.Now.AddDays(-1));
-        var menu2 = new Menu(2, DateTime.Now.AddDays(-2));
+        var menu1 = new Menu(1, DateTime.Now.AddDays(-1), _branch);
+        var menu2 = new Menu(2, DateTime.Now.AddDays(-2), _branch);
 
         Menu.SaveExtent(); // Assuming you save the extents after creating new menus
 

@@ -74,8 +74,8 @@ public class FlexibleEmpl : AbstractEmployee, IDeliveryEmpl, IWaiterEmpl
             DeliveryArea,
             TipsEarned,
             EmployeeType,
-            EmployerBranch,
-            ManagedBranch
+            // EmployerBranch,
+            // ManagedBranch
         };
     }
 }

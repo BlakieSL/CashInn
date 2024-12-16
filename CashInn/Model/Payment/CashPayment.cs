@@ -28,8 +28,8 @@ public class CashPayment : AbstractPayment
         }
     }
     private double? _changeGiven;
-    public CashPayment(int id, double amount, double cashReceived, double changeGiven, DateTime dateOfPayment) 
-        : base(id, amount, dateOfPayment)
+    public CashPayment(int id, double amount, double cashReceived, double changeGiven, DateTime dateOfPayment, Order order) 
+        : base(id, amount, dateOfPayment, order)
     {
         CashReceived = cashReceived;
         ChangeGiven = changeGiven;

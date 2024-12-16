@@ -1,10 +1,13 @@
-﻿using CashInn.Helper;
+﻿using System.Text.Json.Serialization;
+using CashInn.Helper;
 using CashInn.Model.Employee;
 
 namespace CashInn.Model;
 
 public class Customer : ClassExtent<Customer>
 {
+    private readonly List<Reservation> _reservations = [];
+    [JsonIgnore] public IEnumerable<Reservation> Reservations => _reservations.AsReadOnly();
     protected override string FilePath => ClassExtentFiles.CustomersFile;
     public int Id 
     {
@@ -78,4 +81,48 @@ public class Customer : ClassExtent<Customer>
     }
     
     public Customer(){}
+    
+    public void AddReservation(Reservation reservation)
+    {
+        ArgumentNullException.ThrowIfNull(reservation);
+
+        if (reservation.Customer != null && !Equals(reservation.Customer, this))
+        {
+            throw new InvalidOperationException("Employee is already employed by another Branch");
+        }
+
+        reservation.SetCustomer(this);
+    }
+
+    internal void AddReservationInternal(Reservation reservation)
+    {
+        if (!_reservations.Contains(reservation))
+        {
+            _reservations.Add(reservation);
+        }
+
+        UpdateInstance(this);
+    }
+    
+    public void RemoveReservation(Reservation reservation)
+    {
+        ArgumentNullException.ThrowIfNull(reservation);
+
+        if (!_reservations.Contains(reservation))
+        {
+            throw new InvalidOperationException("Reservation is not made this Customer");
+        }
+
+        reservation.RemoveCustomer();
+    }
+
+    internal void RemoveReservationInternal(Reservation reservation)
+    {
+        if (_reservations.Contains(reservation))
+        {
+            _reservations.Remove(reservation);
+        }
+
+        UpdateInstance(this);
+    }
 }

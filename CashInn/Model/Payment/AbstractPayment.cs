@@ -10,6 +10,8 @@ public abstract class AbstractPayment
 {
     private static readonly List<AbstractPayment> Payments = [];
     private static string _filepath = ClassExtentFiles.PaymentsFile;
+    public Order Order { get; private set; }
+
     public abstract string PaymentType { get; }
     public int Id 
     {
@@ -47,8 +49,12 @@ public abstract class AbstractPayment
     }
     private DateTime _dateOfPayment;
 
-    protected AbstractPayment(int id, double amount, DateTime dateOfPayment)
+    protected AbstractPayment(int id, double amount, DateTime dateOfPayment, Order order)
     {
+        if (order == null) throw new ArgumentNullException(nameof(order));
+        
+        SetOrder(order);
+        
         Id = id;
         Amount = amount;
         DateOfPayment = dateOfPayment;
@@ -79,6 +85,12 @@ public abstract class AbstractPayment
                 dateOfPayment = dateOfPayJson.GetDateTime();
             }
             
+            Order deserOrder = JsonSerializer.Deserialize<Order>(paymentData.GetProperty("Order").GetRawText());
+            if (deserOrder == null)
+            {
+                throw new InvalidOperationException("Order cannot be null.");
+            }
+            
             AbstractPayment abstractPayment;
             if (itemType == "Cash")
             {
@@ -87,7 +99,8 @@ public abstract class AbstractPayment
                     amount,
                     paymentData.GetProperty("CashReceived").GetDouble(),
                     paymentData.GetProperty("ChangeGiven").GetDouble(),
-                    dateOfPayment.Value
+                    dateOfPayment.Value,
+                    deserOrder
                 );
             }
             else if (itemType == "Card")
@@ -96,7 +109,8 @@ public abstract class AbstractPayment
                     id,
                     amount,
                     dateOfPayment.Value,
-                    paymentData.GetProperty("CardNumber").GetString()
+                    paymentData.GetProperty("CardNumber").GetString(),
+                    deserOrder
                 );
             } 
             else
@@ -115,5 +129,20 @@ public abstract class AbstractPayment
     public static ICollection<AbstractPayment> GetAll()
     {
         return Payments.ToImmutableList();
+    }
+
+    public void SetOrder(Order order)
+    { 
+        ArgumentNullException.ThrowIfNull(order);
+        
+        if (Order == order) return;
+
+        if (Order != null)
+        {
+            throw new InvalidOperationException("Payment is already assigned to another Order");
+        }
+
+        Order = order;
+        order.AddPaymentInternal(this);
     }
 }

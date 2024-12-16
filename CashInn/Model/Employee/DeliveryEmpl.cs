@@ -59,8 +59,8 @@ public class DeliveryEmpl : AbstractEmployee, IDeliveryEmpl
             Vehicle,
             DeliveryArea,
             EmployeeType,
-            EmployerBranch,
-            ManagedBranch
+            // EmployerBranch,
+            // ManagedBranch
         };
     }
     

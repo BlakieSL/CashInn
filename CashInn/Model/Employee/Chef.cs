@@ -83,8 +83,8 @@ public class Chef : AbstractEmployee, IKitchenEmpl
             YearsOfExperience,
             MichelinStars,
             EmployeeType,
-            EmployerBranch,
-            ManagedBranch
+            // EmployerBranch,
+            // ManagedBranch
         };
     }
 

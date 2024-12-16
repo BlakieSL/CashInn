@@ -1,11 +1,13 @@
 ﻿using CashInn.Helper;
 using CashInn.Model.Employee;
+using CashInn.Model.Payment;
 
 namespace CashInn.Model;
 
 public class Order : ClassExtent<Order>
 {
     public DeliveryEmpl? DeliveryEmpl { get; private set; }
+    public AbstractPayment Payment { get; private set; }
     protected override string FilePath => ClassExtentFiles.OrdersFile;
     public int Id
     {
@@ -76,5 +78,24 @@ public class Order : ClassExtent<Order>
 
         RemoveDeliveryEmployee();
         AddDeliveryEmployee(newDelivery);
+    }
+    
+    public void AddPayment(AbstractPayment payment)
+    {
+        ArgumentNullException.ThrowIfNull(payment);
+
+        if (payment.Order != null && !Equals(payment.Order, this))
+        {
+            throw new InvalidOperationException("Payment is already assigned to another Order");
+        }
+
+        payment.SetOrder(this);
+    }
+
+    internal void AddPaymentInternal(AbstractPayment payment)
+    {
+        Payment = payment;
+
+        UpdateInstance(this);
     }
 }

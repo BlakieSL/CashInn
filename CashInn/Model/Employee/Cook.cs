@@ -75,8 +75,8 @@ public class Cook : AbstractEmployee, IKitchenEmpl
             YearsOfExperience,
             Station,
             EmployeeType,
-            EmployerBranch,
-            ManagedBranch
+            // EmployerBranch,
+            // ManagedBranch
         };
     }
     //--------------------------------------------

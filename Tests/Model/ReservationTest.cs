@@ -6,13 +6,15 @@ namespace Tests.model;
 [TestOf(typeof(Reservation))]
 public class ReservationTest
 {
+    private Customer _customer = new Customer(1, "name", "number", "string", "string");
+
     private Reservation _reservation = null!;
     private const string TestFilePath = "Reservations.json";
-
+    
     [SetUp]
     public void SetUp()
     {
-        _reservation = new Reservation(1, 4);
+        _reservation = new Reservation(1, 4, _customer);
         if (File.Exists(TestFilePath))
         {
             File.Delete(TestFilePath);
@@ -25,6 +27,7 @@ public class ReservationTest
     [Test]
     public void Id_SetNegativeValue_ShouldThrowException()
     {
+        _reservation = new Reservation(1, 4, _customer);
         Assert.Throws<ArgumentException>(() => _reservation.Id = -1);
     }
 
@@ -53,8 +56,8 @@ public class ReservationTest
     {
         Reservation.ClearExtent();
 
-        var reservation1 = new Reservation(1, 4);
-        var reservation2 = new Reservation(2, 6);
+        var reservation1 = new Reservation(1, 4, _customer);
+        var reservation2 = new Reservation(2, 6, _customer);
 
         Reservation.SaveExtent();
 

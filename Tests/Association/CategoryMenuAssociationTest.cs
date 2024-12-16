@@ -15,8 +15,9 @@ namespace Tests.Association
         [SetUp]
         public void SetUp()
         {
+            Branch _branch = new Branch(1, "loc", "contact");
             _category = new Category(1, "Main Dishes");
-            _menu = new Menu(1, DateTime.Now);
+            _menu = new Menu(1, DateTime.Now, _branch);
         }
 
         [Test]

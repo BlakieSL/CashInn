@@ -23,7 +23,7 @@ public class TableTest
             CashInn.Enum.StatusEmpl.FullTime, false, 200.0, _branch);
 
         // Initialize a table
-        _table = new Table(1, 4);
+        _table = new Table(1, 4, _branch);
 
         // Clean up the test file if it exists
         if (File.Exists(TestFilePath))
@@ -39,14 +39,14 @@ public class TableTest
     [Test]
     public void Id_SetNegativeValue_ShouldThrowException()
     {
-        Assert.Throws<ArgumentException>(() => _table.Id = -1);
+        Assert.Throws<ArgumentException>(() => _table.TableNumber = -1);
     }
 
     [Test]
     public void Id_SetPositiveValue_ShouldSet()
     {
-        _table.Id = 2;
-        Assert.That(_table.Id, Is.EqualTo(2));
+        _table.TableNumber = 2;
+        Assert.That(_table.TableNumber, Is.EqualTo(2));
     }
 
     [Test]
@@ -133,17 +133,17 @@ public class TableTest
     public void LoadExtent_ShouldRetrieveStoredTablesCorrectly()
     {
         Table.ClearExtent();
-        var table1 = new Table(1, 4);
-        var table2 = new Table(2, 6);
+        var table1 = new Table(111, 4, _branch);
+        var table2 = new Table(222, 6, _branch);
 
         Table.SaveExtent();
 
         Table.LoadExtent();
-        Assert.AreEqual(2, Table.GetAll().Count);
+        Assert.That(Table.GetAll().Count, Is.EqualTo(2));
 
         var loadedTables = Table.GetAll();
-        Assert.IsTrue(loadedTables.Any(t => t.Id == 1));
-        Assert.IsTrue(loadedTables.Any(t => t.Id == 2));
+        Assert.IsTrue(loadedTables.Any(t => t.TableNumber == 111));
+        Assert.IsTrue(loadedTables.Any(t => t.TableNumber == 222));
     }
 
     [TearDown]

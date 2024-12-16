@@ -36,13 +36,13 @@ app.MapGet("/create-employees", () =>
     return "Employees saved!";
 });
 
-app.MapGet("/create-payments", () =>
-{
-    var paymentCard = new CardPayment(1, 23.60, DateTime.Today.AddDays(1), "123-123-123");
-    var paymentCash = new CashPayment(2, 23.00, 50.00, 27.00, DateTime.Today.AddDays(1));
-    AbstractPayment.SaveExtent();
-    return "Payments created and saved!";
-});
+// app.MapGet("/create-payments", () =>
+// {
+//     var paymentCard = new CardPayment(1, 23.60, DateTime.Today.AddDays(1), "123-123-123");
+//     var paymentCash = new CashPayment(2, 23.00, 50.00, 27.00, DateTime.Today.AddDays(1));
+//     AbstractPayment.SaveExtent();
+//     return "Payments created and saved!";
+// });
 
 app.MapGet("/create-menuitems", () =>
 {

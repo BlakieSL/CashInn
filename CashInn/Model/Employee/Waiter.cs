@@ -45,8 +45,8 @@ public class Waiter : AbstractEmployee, IWaiterEmpl
             LayoffDate,
             TipsEarned,
             EmployeeType,
-            EmployerBranch,
-            ManagedBranch
+            // EmployerBranch,
+            // ManagedBranch
         };
     }
     
