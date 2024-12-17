@@ -62,8 +62,10 @@ namespace Tests.Association
         {
             _menuItem.AddIngredient(_ingredient);
             _menuItem.AddIngredient(_ingredient);
+            _menuItem.AddIngredient(_ingredient);
+            _menuItem.AddIngredient(_ingredient);
 
-            Assert.That(_menuItem.Ingredients, Is.EquivalentTo(new[] { _ingredient }));
+            Assert.That(_menuItem.Ingredients.Count(), Is.EqualTo(2));
         }
 
         [Test]

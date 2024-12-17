@@ -25,8 +25,8 @@ public class MenuItemOrderAssociationTests
         _menuItem2 = new DefaultItem(2, "Fries", 4.99, "Crispy Fries", 
             "Vegetarian", true, ServingSize.Medium, _category);
 
-        _order1 = new Order(1, DateTime.Now, false);
-        _order2 = new Order(2, DateTime.Now, true);
+        _order1 = new Order(1, DateTime.Today, false);
+        _order2 = new Order(2, DateTime.Today, true);
     }
 
     [Test]

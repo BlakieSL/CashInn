@@ -42,7 +42,7 @@ public abstract class AbstractPayment
         get => _dateOfPayment;
         set
         {
-            if (value < DateTime.Now)
+            if (value < DateTime.Today)
                 throw new ArgumentException("DateOfPayment cannot be before now", nameof(DateOfPayment));
             _dateOfPayment = value;
         }

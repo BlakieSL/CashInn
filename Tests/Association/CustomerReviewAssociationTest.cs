@@ -19,7 +19,7 @@ public class CustomerReviewAssociationTest
     {
         _customer = new Customer(1, "John Doe", "1234567890",
             "123 Main St", "john.doe@example.com");
-        _order = new Order(1, DateTime.Now, true);
+        _order = new Order(1, DateTime.Today, true);
         _review1 = new Review(1, Rating.One, "Great service!", _customer, _order);
     }
 
