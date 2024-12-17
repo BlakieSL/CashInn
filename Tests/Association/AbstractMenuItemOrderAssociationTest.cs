@@ -38,8 +38,8 @@ public class MenuItemOrderAssociationTests
         {
             Assert.That(_order1.MenuItemAssociations.Count(), Is.EqualTo(1));
             Assert.That(_menuItem1.OrderAssociations.Count(), Is.EqualTo(1));
-            Assert.That(_order1.MenuItemAssociations.First().menuItem, Is.EqualTo(_menuItem1));
-            Assert.That(_menuItem1.OrderAssociations.First().order, Is.EqualTo(_order1));
+            Assert.That(_order1.MenuItemAssociations.First().MenuItem, Is.EqualTo(_menuItem1));
+            Assert.That(_menuItem1.OrderAssociations.First().Order, Is.EqualTo(_order1));
             Assert.That(_order1.MenuItemAssociations.First().Quantity, Is.EqualTo(2));
         });
     }
@@ -70,9 +70,9 @@ public class MenuItemOrderAssociationTests
         Assert.Multiple(() =>
         {
             Assert.That(_order1.MenuItemAssociations, Has.None.Matches<AbstractMenuItemOrderAssociation>(
-                a => a.menuItem == _menuItem1));
+                a => a.MenuItem == _menuItem1));
             Assert.That(_menuItem1.OrderAssociations, Has.None.Matches<AbstractMenuItemOrderAssociation>(
-                a => a.order == _order1));
+                a => a.Order == _order1));
         });
 
     }
@@ -92,8 +92,8 @@ public class MenuItemOrderAssociationTests
         {
             Assert.That(_menuItem1.OrderAssociations.Count(), Is.EqualTo(1));
             Assert.That(_order1.MenuItemAssociations.Count(), Is.EqualTo(1));
-            Assert.That(_menuItem1.OrderAssociations.First().order, Is.EqualTo(_order1));
-            Assert.That(_order1.MenuItemAssociations.First().menuItem, Is.EqualTo(_menuItem1));
+            Assert.That(_menuItem1.OrderAssociations.First().Order, Is.EqualTo(_order1));
+            Assert.That(_order1.MenuItemAssociations.First().MenuItem, Is.EqualTo(_menuItem1));
             Assert.That(_menuItem1.OrderAssociations.First().Quantity, Is.EqualTo(5));
         });
     }
@@ -107,10 +107,10 @@ public class MenuItemOrderAssociationTests
         Assert.Multiple(() =>
         {
             Assert.That(_menuItem1.OrderAssociations, Has.None.Matches<AbstractMenuItemOrderAssociation>(
-                a => a.order == _order1));
+                a => a.Order == _order1));
 
             Assert.That(_order1.MenuItemAssociations, Has.None.Matches<AbstractMenuItemOrderAssociation>(
-                a => a.menuItem == _menuItem1));
+                a => a.MenuItem == _menuItem1));
         });
 
     }
@@ -153,8 +153,8 @@ public class MenuItemOrderAssociationTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(_order1.MenuItemAssociations, Contains.Item(_order1.MenuItemAssociations.FirstOrDefault(a => a.menuItem == _menuItem2)));
-            Assert.That(_menuItem2.OrderAssociations, Contains.Item(_menuItem2.OrderAssociations.FirstOrDefault(a => a.order == _order1)));
+            Assert.That(_order1.MenuItemAssociations, Contains.Item(_order1.MenuItemAssociations.FirstOrDefault(a => a.MenuItem == _menuItem2)));
+            Assert.That(_menuItem2.OrderAssociations, Contains.Item(_menuItem2.OrderAssociations.FirstOrDefault(a => a.Order == _order1)));
             Assert.That(_menuItem1.OrderAssociations, Is.Empty);
         });
     }
@@ -169,8 +169,8 @@ public class MenuItemOrderAssociationTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(_menuItem1.OrderAssociations, Contains.Item(_menuItem1.OrderAssociations.FirstOrDefault(a => a.order == _order2)));
-            Assert.That(_order2.MenuItemAssociations, Contains.Item(_order2.MenuItemAssociations.FirstOrDefault(a => a.menuItem == _menuItem1)));
+            Assert.That(_menuItem1.OrderAssociations, Contains.Item(_menuItem1.OrderAssociations.FirstOrDefault(a => a.Order == _order2)));
+            Assert.That(_order2.MenuItemAssociations, Contains.Item(_order2.MenuItemAssociations.FirstOrDefault(a => a.MenuItem == _menuItem1)));
             Assert.That(_order1.MenuItemAssociations, Is.Empty);
         });
     }

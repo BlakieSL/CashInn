@@ -118,7 +118,7 @@ public class Order : ClassExtent<Order>
     {
         ArgumentNullException.ThrowIfNull(menuItem);
         
-        var association = _menuItemAssociations.FirstOrDefault(a => a.menuItem == menuItem);
+        var association = _menuItemAssociations.FirstOrDefault(a => a.MenuItem == menuItem);
         if (association == null) return;
 
         _menuItemAssociations.Remove(association);

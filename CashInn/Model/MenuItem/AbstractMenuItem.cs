@@ -332,12 +332,12 @@ public abstract class AbstractMenuItem
         _orderAssociations.Add(association);
         order.AddMenuItemAssociationInternal(association);
     }
-
+    
     public void RemoveOrder(Order order)
     {
         ArgumentNullException.ThrowIfNull(order); 
         
-        var association = _orderAssociations.FirstOrDefault(a => a.order == order);
+        var association = _orderAssociations.FirstOrDefault(a => a.Order == order);
         if (association == null) return;
 
         _orderAssociations.Remove(association);

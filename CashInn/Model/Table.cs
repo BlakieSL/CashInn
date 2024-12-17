@@ -5,9 +5,13 @@ namespace CashInn.Model;
 
 public class Table : ClassExtent<Table>
 {
+    protected override string FilePath => ClassExtentFiles.TablesFile;
+
+    private readonly List<TableReservationAssociation> _reservationAssociations = [];
+    public IEnumerable<TableReservationAssociation> ReservationAssociations => _reservationAssociations.AsReadOnly();
+    
     public Waiter? Waiter { get; private set; }
     public Branch Branch { get; private set; }
-    protected override string FilePath => ClassExtentFiles.TablesFile;
     public int TableNumber 
     {
         get => _tableNumber;
@@ -96,5 +100,36 @@ public class Table : ClassExtent<Table>
     {
         RemoveInstance(this);
         Branch.RemoveTableInternal(this);
+    }
+
+    public void AddReservation(Reservation reservation, DateTime startTime, DateTime endTime)
+    {
+        ArgumentNullException.ThrowIfNull(reservation);
+
+        var association = new TableReservationAssociation(this, reservation, startTime, endTime);
+        _reservationAssociations.Add(association);
+        reservation.AddTableAssociation(association);
+    }
+
+    public void RemoveReservation(Reservation reservation)
+    {
+        ArgumentNullException.ThrowIfNull(reservation);
+
+        var association = _reservationAssociations.FirstOrDefault(a => a.Reservation == reservation);
+        if (association == null) return;
+
+        _reservationAssociations.Remove(association);
+        reservation.RemoveTableAssociation(association);
+    }
+
+    internal void AddReservationAssociationInternal(TableReservationAssociation association)
+    {
+        if(!_reservationAssociations.Contains(association)) 
+            _reservationAssociations.Add(association);
+    }
+
+    internal void RemoveReservationAssociationInternal(TableReservationAssociation association)
+    {
+        _reservationAssociations.Remove(association);
     }
 }

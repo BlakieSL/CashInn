@@ -4,8 +4,8 @@ namespace CashInn.Model;
 
 public class AbstractMenuItemOrderAssociation
 {
-    public AbstractMenuItem menuItem { get; private set; }
-    public Order order { get; private set; }
+    public AbstractMenuItem MenuItem { get; private set; }
+    public Order Order { get; private set; }
     
     private int _quantity;
     public int Quantity
@@ -24,8 +24,8 @@ public class AbstractMenuItemOrderAssociation
     public AbstractMenuItemOrderAssociation(AbstractMenuItem menuItem, Order order, int quantity)
     {
         Quantity = quantity;
-        this.menuItem = menuItem;
-        this.order = order;
+        MenuItem = menuItem;
+        Order = order;
     }
 
     public void Update(int quantity)
