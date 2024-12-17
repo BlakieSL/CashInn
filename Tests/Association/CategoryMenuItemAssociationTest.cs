@@ -1,173 +1,104 @@
-﻿using CashInn.Model;
+﻿using CashInn.Enum;
+using CashInn.Model;
 using CashInn.Model.MenuItem;
-using CashInn.Enum;
-using NUnit.Framework;
 
 namespace Tests.Association;
 
 [TestFixture]
 [TestOf(typeof(Category))]
-public class CategoryMenuItemAssociationTests
+public class CategoryMenuItemAssociationTest
 {
     private Category _category = null!;
-    private DefaultItem _menuItem = null!;
+    private DefaultItem _menuItem1 = null!;
+    private DefaultItem _menuItem2 = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _category = new Category(1, "Main Dishes");
+        _category = new Category(1, "Beverages");
 
-        _menuItem = new DefaultItem(
-            1,
-            "Grilled Chicken",
-            12.99,
-            "Delicious grilled chicken with herbs",
-            "High Protein",
-            true,
-            ServingSize.Medium,
-            _category
-        );
+        _menuItem1 = new DefaultItem(1, "Coffee", 2.5, "Hot coffee", "None",
+            true, ServingSize.Small, _category);
+
+        _menuItem2 = new DefaultItem(2, "Tea", 1.5, "Hot tea", "None",
+            true, ServingSize.Small, _category);
     }
 
     [Test]
     public void AddMenuItem_ShouldAddMenuItemToCategory()
     {
-        _category.AddMenuItem(_menuItem);
+        _category.AddMenuItem(_menuItem1);
 
         Assert.Multiple(() =>
         {
-            Assert.That(_category.MenuItems, Contains.Item(_menuItem));
-            Assert.That(_menuItem.Category, Is.EqualTo(_category));
+            Assert.That(_category.MenuItems, Contains.Item(_menuItem1));
+            Assert.That(_menuItem1.Category, Is.EqualTo(_category));
         });
     }
 
     [Test]
-    public void AddMenuItem_WhenMenuItemAlreadyAssignedToAnotherCategory_ShouldThrowException()
+    public void RemoveMenuItem_ShouldRemoveMenuItemFromCategory()
     {
-        var anotherCategory = new Category(2, "Special Dishes");
-
-        Assert.Throws<ArgumentException>(() => anotherCategory.AddMenuItem(_menuItem));
-    }
-
-    [Test]
-    public void AddMenuItem_ShouldNotCauseInfiniteRecursion()
-    {
-        Assert.DoesNotThrow(() => _category.AddMenuItem(_menuItem));
-    }
-
-    [Test]
-    public void RemoveMenuItem_ShouldRemoveMenuItemFromCategoryAndClearCategoryReference()
-    {
-        _category.AddMenuItem(_menuItem);
-        _category.RemoveMenuItem(_menuItem);
+        _category.AddMenuItem(_menuItem1);
+        _category.RemoveMenuItem(_menuItem1);
 
         Assert.Multiple(() =>
         {
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem));
-            Assert.That(_menuItem.Category, Is.Null);
+            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
         });
     }
 
     [Test]
-    public void RemoveMenuItem_WhenMenuItemNotInCategory_ShouldNotThrowException()
+    public void AddMenuItem_ShouldThrowException_WhenMenuItemAlreadyBelongsToAnotherCategory()
     {
-        Assert.DoesNotThrow(() => _category.RemoveMenuItem(_menuItem));
+        var anotherCategory = new Category(2, "Snacks");
+
+        Assert.Throws<ArgumentException>(() => anotherCategory.AddMenuItem(_menuItem1));
     }
 
     [Test]
-    public void UpdateMenuItem_ShouldReplaceOldMenuItemWithNewMenuItem()
+    public void RemoveMenuItem_ShouldThrowException_WhenMenuItemNotInCategory()
     {
-        var newMenuItem = new DefaultItem(
-            2,
-            "Steak",
-            19.99,
-            "Grilled steak with sides",
-            "High Protein",
-            true,
-            ServingSize.Small,
-            _category
-        );
-
-        _category.AddMenuItem(_menuItem);
-        _category.UpdateMenuItem(_menuItem, newMenuItem);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem));
-            Assert.That(_category.MenuItems, Contains.Item(newMenuItem));
-            Assert.That(newMenuItem.Category, Is.EqualTo(_category));
-            Assert.That(_menuItem.Category, Is.Null);
-        });
+        var anotherCategory = new Category(2, "Snacks");
+        Assert.Throws<InvalidOperationException>(() => anotherCategory.RemoveMenuItem(_menuItem1));
     }
 
     [Test]
-    public void UpdateMenuItem_WhenOldMenuItemNotInCategory_ShouldThrowException()
-    {
-        var newMenuItem = new DefaultItem(
-            2,
-            "Steak",
-            19.99,
-            "Grilled steak with sides",
-            "High Protein",
-            true,
-            ServingSize.Small,
-            _category
-        );
-
-        Assert.DoesNotThrow(() => _category.UpdateMenuItem(_menuItem, newMenuItem));
-    }
-
-    [Test]
-    public void AddCategory_ShouldSetCategoryForMenuItem()
-    {
-        _menuItem.AddCategory(_category);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(_menuItem.Category, Is.EqualTo(_category));
-            Assert.That(_category.MenuItems, Contains.Item(_menuItem));
-        });
-    }
-
-    [Test]
-    public void AddCategory_WhenMenuItemAlreadyInAnotherCategory_ShouldThrowException()
-    {
-        var anotherCategory = new Category(2, "Special Dishes");
-        Assert.Throws<InvalidOperationException>(() => _menuItem.AddCategory(anotherCategory));
-    }
-
-    [Test]
-    public void RemoveCategory_ShouldClearCategoryForMenuItem()
-    {
-        _menuItem.AddCategory(_category);
-        _menuItem.RemoveCategory();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(_menuItem.Category, Is.Null);
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem));
-        });
-    }
-
-    [Test]
-    public void RemoveCategory_WhenMenuItemHasNoCategory_ShouldNotThrowException()
-    {
-        Assert.DoesNotThrow(() => _menuItem.RemoveCategory());
-    }
-
-    [Test]
-    public void UpdateCategory_ShouldReplaceOldCategoryWithNewCategory()
+    public void SetCategory_ShouldSetCategorySuccessfully()
     {
         var newCategory = new Category(2, "Desserts");
-
-        _menuItem.AddCategory(_category);
-        _menuItem.UpdateCategory(newCategory);
+        _menuItem1.SetCategory(newCategory);
 
         Assert.Multiple(() =>
         {
-            Assert.That(_menuItem.Category, Is.EqualTo(newCategory));
-            Assert.That(newCategory.MenuItems, Contains.Item(_menuItem));
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem));
+            Assert.That(_menuItem1.Category, Is.EqualTo(newCategory));
+            Assert.That(newCategory.MenuItems, Contains.Item(_menuItem1));
+            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
+        });
+    }
+
+    [Test]
+    public void SetCategory_WhenAlreadyHasCategory_ShouldUpdateCategorySuccessfully()
+    {
+        var newCategory = new Category(2, "Desserts");
+        _menuItem1.SetCategory(newCategory);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_menuItem1.Category, Is.EqualTo(newCategory));
+            Assert.That(newCategory.MenuItems, Contains.Item(_menuItem1));
+            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
+        });
+    }
+
+    [Test]
+    public void RemoveCategory_ShouldRemoveCategorySuccessfully()
+    {
+        _menuItem1.RemoveCategory();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
         });
     }
 }

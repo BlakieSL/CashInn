@@ -7,6 +7,8 @@ namespace CashInn.Model;
 public class Review : ClassExtent<Review>
 {
     protected override string FilePath => ClassExtentFiles.ReviewsFile;
+
+    public Customer Customer { get; private set; }
     public int Id
     {
         get => _id;
@@ -32,14 +34,32 @@ public class Review : ClassExtent<Review>
     }
     private string _description;
 
-    public Review(int id, Rating rating, string description)
+    public Review(int id, Rating rating, string description, Customer customer)
     {
         Id = id;
         ReviewRating = rating;
         Description = description;
-        
+        SetCustomer(customer);
+
         AddInstance(this);
     }
     
     public Review(){}
+
+    public void SetCustomer(Customer customer)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+        if (Customer == customer) return;
+
+        Customer?.RemoveReviewInternal(this);
+
+        Customer = customer;
+        customer.AddReviewInternal(this);
+    }
+
+    public void RemoveCustomer()
+    {
+        Customer.RemoveReviewInternal(this);
+    }
+
 }

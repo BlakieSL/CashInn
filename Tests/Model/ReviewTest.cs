@@ -13,7 +13,7 @@ public class ReviewTest
     [SetUp]
     public void SetUp()
     {
-        _review = new Review(1, Rating.Five, "Excellent service!");
+        _review = new Review(1, Rating.Five, "Excellent service!", new Customer());
         if (File.Exists(TestFilePath))
         {
             File.Delete(TestFilePath);
@@ -66,8 +66,8 @@ public class ReviewTest
     public void LoadExtent_ShouldRetrieveStoredReviewsCorrectly()
     {
         Review.ClearExtent();
-        var review1 = new Review(1, Rating.Five, "Excellent service!");
-        var review2 = new Review(2, Rating.Four, "Good food!");
+        var review1 = new Review(1, Rating.Five, "Excellent service!", new Customer());
+        var review2 = new Review(2, Rating.Four, "Good food!", new Customer());
 
         Review.SaveExtent();
 

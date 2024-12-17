@@ -54,29 +54,18 @@ public class Category : ClassExtent<Category>
             throw new ArgumentException("Menu item already belongs to another category", nameof(menuItem));
         }
 
-        menuItem.AddCategory(this);
+        menuItem.SetCategory(this);
     }
 
     public void RemoveMenuItem(AbstractMenuItem menuItem)
     {
         ArgumentNullException.ThrowIfNull(menuItem);
-        if (!_menuItems.Contains(menuItem)) return;
-
-        menuItem.RemoveCategory();
-    }
-
-    public void UpdateMenuItem(AbstractMenuItem oldMenuItem, AbstractMenuItem newMenuItem)
-    {
-        ArgumentNullException.ThrowIfNull(oldMenuItem);
-        ArgumentNullException.ThrowIfNull(newMenuItem);
-
-        if (!_menuItems.Contains(oldMenuItem))
+        if (!_menuItems.Contains(menuItem))
         {
             throw new InvalidOperationException("MenuItem is not in this category");
         }
 
-        RemoveMenuItem(oldMenuItem);
-        AddMenuItem(newMenuItem);
+        menuItem.RemoveCategory();
     }
 
     internal void AddMenuItemInternal(AbstractMenuItem menuItem)
@@ -89,7 +78,6 @@ public class Category : ClassExtent<Category>
     {
             _menuItems.Remove(menuItem);
     }
-
 
     public void AddMenu(Menu menu)
     {

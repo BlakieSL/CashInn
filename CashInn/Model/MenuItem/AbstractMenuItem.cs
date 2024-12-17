@@ -95,7 +95,7 @@ public abstract class AbstractMenuItem
         DietaryInformation = dietaryInformation;
         Available = available;
         
-        AddCategory(category);
+        SetCategory(category);
     }
     public static void SaveExtent()
     {
@@ -125,7 +125,7 @@ public abstract class AbstractMenuItem
             {
                 throw new InvalidOperationException("Category cannot be null.");
             }
-            
+
             AbstractMenuItem abstractMenuItem;
             if (itemType == "Default")
             {
@@ -138,7 +138,7 @@ public abstract class AbstractMenuItem
                 {
                     throw new ArgumentException($"Invalid status value: {servingSizeString}");
                 }
-                
+
                 abstractMenuItem = new DefaultItem(
                     id,
                     name,
@@ -162,7 +162,7 @@ public abstract class AbstractMenuItem
                 {
                     validTo = validToProperty.GetDateTime();
                 }
-                
+
                 abstractMenuItem = new SpecialItem(
                     id,
                     name,
@@ -174,35 +174,32 @@ public abstract class AbstractMenuItem
                     validTo.Value,
                     category
                 );
-            } 
+            }
             else
             {
                 throw new InvalidOperationException("Unknown employee type.");
             }
         }
     }
-    
+
     public static void SaveItem(AbstractMenuItem abstractMenuItem)
     {
         ArgumentNullException.ThrowIfNull(abstractMenuItem);
         MenuItems.Add(abstractMenuItem);
     }
-    
+
     public static ICollection<AbstractMenuItem> GetAll()
     {
         return MenuItems.ToImmutableList();
     }
 
-    public void AddCategory(Category category)
+    public void SetCategory(Category category)
     {
         ArgumentNullException.ThrowIfNull(category);
 
         if (Category == category) return;
 
-        if (Category != null)
-        {
-            throw new InvalidOperationException("Menu item is already in another category.");
-        }
+        Category?.RemoveMenuItemInternal(this);
 
         Category = category;
         category.AddMenuItemInternal(this);
@@ -210,19 +207,7 @@ public abstract class AbstractMenuItem
 
     public void RemoveCategory()
     {
-        if (Category == null) return;
-
-        var currentCategory = Category;
-        Category = null;
-        currentCategory.RemoveMenuItemInternal(this);
-    }
-
-    public void UpdateCategory(Category newCategory)
-    {
-        ArgumentNullException.ThrowIfNull(newCategory);
-
-        RemoveCategory();
-        AddCategory(newCategory);
+        Category.RemoveMenuItemInternal(this);
     }
 
     public void AddIngredient(Ingredient ingredient)

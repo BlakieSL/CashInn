@@ -6,10 +6,15 @@ namespace CashInn.Model;
 
 public class Customer : ClassExtent<Customer>
 {
+    protected override string FilePath => ClassExtentFiles.CustomersFile;
+
     private readonly List<Reservation> _reservations = [];
     [JsonIgnore] public IEnumerable<Reservation> Reservations => _reservations.AsReadOnly();
-    protected override string FilePath => ClassExtentFiles.CustomersFile;
-    public int Id 
+
+    private readonly List<Review> _reviews = [];
+    [JsonIgnore] public IEnumerable<Review> Reviews => _reviews.AsReadOnly();
+
+    public int Id
     {
         get => _id;
         set
@@ -118,11 +123,43 @@ public class Customer : ClassExtent<Customer>
 
     internal void RemoveReservationInternal(Reservation reservation)
     {
-        if (_reservations.Contains(reservation))
-        {
-            _reservations.Remove(reservation);
-        }
+        _reservations.Remove(reservation);
 
         UpdateInstance(this);
+    }
+
+    public void AddReview(Review review)
+    {
+        ArgumentNullException.ThrowIfNull(review);
+
+        if (review.Customer != null && !Equals(review.Customer, this))
+        {
+            throw new InvalidOperationException("Review is already made by another Customer");
+        }
+
+        review.SetCustomer(this);
+    }
+
+    public void RemoveReview(Review review)
+    {
+        ArgumentNullException.ThrowIfNull(review);
+
+        if (!_reviews.Contains(review))
+        {
+            throw new InvalidOperationException("Review is not made by this Customer");
+        }
+
+        review.RemoveCustomer();
+    }
+
+    internal void AddReviewInternal(Review review)
+    {
+        if(!_reviews.Contains(review))
+            _reviews.Add(review);
+    }
+
+    internal void RemoveReviewInternal(Review review)
+    {
+        _reviews.Remove(review);
     }
 }
