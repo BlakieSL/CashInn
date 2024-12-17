@@ -36,8 +36,12 @@ public class TableReservationAssociation
     public TableReservationAssociation(Table table, Reservation reservation, DateTime startDateTime,
         DateTime endDateTime)
     {
-        StartDateTime = startDateTime;
-        EndDateTime = endDateTime;
+        if (startDateTime > endDateTime)
+        {
+            throw new ArgumentException("StartDateTime cannot be after EndDateTime", nameof(startDateTime));
+        }
+        _startDateTime = startDateTime;
+        _endDateTime = endDateTime;
         Table = table;
         Reservation = reservation;
     }
