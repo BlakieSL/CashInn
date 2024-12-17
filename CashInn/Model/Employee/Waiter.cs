@@ -27,7 +27,7 @@ public class Waiter : AbstractEmployee, IWaiterEmpl
     {
         TipsEarned = tipsEarned;
         
-        SaveEmployee(this);
+        AddInstance();
     }
     
     public override object ToSerializableObject()

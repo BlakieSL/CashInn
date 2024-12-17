@@ -13,6 +13,9 @@ public class Customer : ClassExtent<Customer>
 
     private readonly List<Review> _reviews = [];
     [JsonIgnore] public IEnumerable<Review> Reviews => _reviews.AsReadOnly();
+    
+    private readonly List<Order> _orders = [];
+    [JsonIgnore] public IEnumerable<Order> Orders => _orders.AsReadOnly();
 
     public int Id
     {
@@ -118,13 +121,7 @@ public class Customer : ClassExtent<Customer>
             throw new InvalidOperationException("Reservation is not made this Customer");
         }
 
-        reservation.RemoveCustomer();
-    }
-
-    internal void RemoveReservationInternal(Reservation reservation)
-    {
         _reservations.Remove(reservation);
-
         UpdateInstance(this);
     }
 
@@ -148,18 +145,46 @@ public class Customer : ClassExtent<Customer>
         {
             throw new InvalidOperationException("Review is not made by this Customer");
         }
-
-        review.RemoveCustomer();
+        
+        _reviews.Remove(review);
+        UpdateInstance(this);
     }
 
     internal void AddReviewInternal(Review review)
     {
         if(!_reviews.Contains(review))
             _reviews.Add(review);
+        UpdateInstance(this);
+    }
+    
+    public void AddOrder(Order order)
+    {
+        ArgumentNullException.ThrowIfNull(order);
+
+        if (_orders.Contains(order)) return;
+        
+        if (order.Customer != null && !Equals(order.Customer, this))
+        {
+            throw new InvalidOperationException("Order is already assigned to another Customer");
+        }
+
+        order.SetCustomer(this);
+    }
+    
+    internal void AddOrderInternal(Order order)
+    {
+        if(!_orders.Contains(order))
+            _orders.Add(order);
+        UpdateInstance(this);
     }
 
-    internal void RemoveReviewInternal(Review review)
+    protected internal override void RemoveInstance(Customer instance)
     {
-        _reviews.Remove(review);
+        foreach (var reservation in _reservations)
+        {
+            reservation.RemoveInstance(reservation);
+        }
+
+        base.RemoveInstance(instance);
     }
 }

@@ -11,7 +11,7 @@ public abstract class AbstractEmployee
     private static readonly string _filepath = ClassExtentFiles.EmployeesFile;
     [JsonIgnore]
     public abstract string EmployeeType { get; }
-    private static readonly ICollection<AbstractEmployee> Employees = new List<AbstractEmployee>();
+    private static readonly ICollection<AbstractEmployee> Instances = new List<AbstractEmployee>();
     public Branch EmployerBranch { get; private set; }
     public Branch? ManagedBranch { get; private set; }
     public int Id 
@@ -124,7 +124,7 @@ public abstract class AbstractEmployee
 
     public static void SaveExtent()
     {
-        Saver.Serialize(Employees.Select(e => e.ToSerializableObject()).ToList(), _filepath);
+        Saver.Serialize(Instances.Select(e => e.ToSerializableObject()).ToList(), _filepath);
     }
     
     public abstract object ToSerializableObject();
@@ -200,26 +200,26 @@ public abstract class AbstractEmployee
         }
     }
 
-    public static void SaveEmployee(AbstractEmployee abstractEmployee)
+    public void AddInstance()
     {
-        ArgumentNullException.ThrowIfNull(abstractEmployee);
-        Employees.Add(abstractEmployee);
+        ArgumentNullException.ThrowIfNull(this);
+        Instances.Add(this);
     }
     
-    public static void DeleteEmployee(AbstractEmployee abstractEmployee)
+    public void RemoveInstance()
     {
-        ArgumentNullException.ThrowIfNull(abstractEmployee);
-        Employees.Remove(abstractEmployee);
+        ArgumentNullException.ThrowIfNull(this);
+        Instances.Remove(this);
     }
     
     public static ICollection<AbstractEmployee> GetAll()
     {
-        return Employees.ToImmutableList();
+        return Instances.ToImmutableList();
     }
 
     public static void ClearExtent()
     {
-        Employees.Clear();
+        Instances.Clear();
     }
 
     public void AddEmployerBranch(Branch branch)
@@ -239,7 +239,7 @@ public abstract class AbstractEmployee
     public void RemoveEmployerBranch()
     {
         EmployerBranch.RemoveEmployeeInternal(this);
-        DeleteEmployee(this);
+        RemoveInstance();
     }
     
     public void AddManagedBranch(Branch branch)

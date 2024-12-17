@@ -30,6 +30,7 @@ namespace Tests.Association
                 ServingSize.Small,
                 new Category(1, "Starters")
             );
+            _menuItem.AddIngredient(new Ingredient(121, "random", 2, true));
             _anotherIngredient = new Ingredient(2, "Cheese", 80, true);
             _anotherMenuItem = new DefaultItem(
                 2,
@@ -41,6 +42,7 @@ namespace Tests.Association
                 ServingSize.Medium,
                 new Category(2, "Main Course")
             );
+            _anotherMenuItem.AddIngredient(new Ingredient(122, "random", 2, true));
         }
 
         [Test]

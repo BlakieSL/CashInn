@@ -86,7 +86,7 @@ public abstract class AbstractMenuItem
     public bool Available { get; set; }
     
     protected AbstractMenuItem(int id, string name, double price, string description, string dietaryInformation,
-        bool available, Category category)
+        bool available, Category? category = null)
     {
         Id = id;
         Name = name;
@@ -95,7 +95,8 @@ public abstract class AbstractMenuItem
         DietaryInformation = dietaryInformation;
         Available = available;
         
-        SetCategory(category);
+        if (category != null) 
+            SetCategory(category);
     }
     public static void SaveExtent()
     {
@@ -120,11 +121,11 @@ public abstract class AbstractMenuItem
             bool available = itemData.GetProperty("Available").GetBoolean();
 
             string itemType = itemData.GetProperty("ItemType").GetString();
-            Category category = JsonSerializer.Deserialize<Category>(itemData.GetProperty("Category").GetRawText());
-            if (category == null)
-            {
-                throw new InvalidOperationException("Category cannot be null.");
-            }
+            // Category category = JsonSerializer.Deserialize<Category>(itemData.GetProperty("Category").GetRawText());
+            // if (category == null)
+            // {
+            //     throw new InvalidOperationException("Category cannot be null.");
+            // }
 
             AbstractMenuItem abstractMenuItem;
             if (itemType == "Default")
@@ -146,8 +147,8 @@ public abstract class AbstractMenuItem
                     description,
                     dietaryInformation,
                     available,
-                    servingSize,
-                    category
+                    servingSize
+                    // category
                 );
             }
             else if (itemType == "Special")
@@ -171,8 +172,8 @@ public abstract class AbstractMenuItem
                     dietaryInformation,
                     available,
                     validFrom.Value,
-                    validTo.Value,
-                    category
+                    validTo.Value
+                    // category
                 );
             }
             else
@@ -198,18 +199,16 @@ public abstract class AbstractMenuItem
         ArgumentNullException.ThrowIfNull(category);
 
         if (Category == category) return;
+        
+        if (Category != null)
+            throw new InvalidOperationException("MenuItem is already assigned to another Category");
 
-        Category?.RemoveMenuItemInternal(this);
-
+        if (category.MenuItems.Contains(this)) return;
+        
         Category = category;
         category.AddMenuItemInternal(this);
     }
-
-    public void RemoveCategory()
-    {
-        Category.RemoveMenuItemInternal(this);
-    }
-
+    
     public void AddIngredient(Ingredient ingredient)
     {
         ArgumentNullException.ThrowIfNull(ingredient);
@@ -225,6 +224,9 @@ public abstract class AbstractMenuItem
         ArgumentNullException.ThrowIfNull(ingredient);
 
         if (!_ingredients.Contains(ingredient)) return;
+
+        if (_ingredients.Count() <= 1)
+            throw new InvalidOperationException("MenuItem must have at least one Ingredient");
 
         _ingredients.Remove(ingredient);
         ingredient.RemoveMenuItemInternal(this);

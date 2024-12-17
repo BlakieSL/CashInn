@@ -55,7 +55,7 @@ public class Cook : AbstractEmployee, IKitchenEmpl
         if (manager != null) AddManager(manager);
         if (kitchen != null) AddKitchen(kitchen);
 
-        SaveEmployee(this);
+        AddInstance();
     }
     
     public override object ToSerializableObject()

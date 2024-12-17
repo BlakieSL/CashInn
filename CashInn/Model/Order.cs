@@ -11,9 +11,10 @@ public class Order : ClassExtent<Order>
 
     private readonly List<AbstractMenuItemOrderAssociation> _menuItemAssociations = [];
     public IEnumerable<AbstractMenuItemOrderAssociation> MenuItemAssociations => _menuItemAssociations.AsReadOnly();
-    
+    public Customer Customer { get; private set; }
     public DeliveryEmpl? DeliveryEmpl { get; private set; }
     public AbstractPayment Payment { get; private set; }
+    public Review? Review { get; private set; }
 
     public int Id
     {
@@ -40,16 +41,24 @@ public class Order : ClassExtent<Order>
     private DateTime _dateAndTime;
     
     private double totalAmount { get; }
-    
     public bool IsDelivered { get; set; }
 
-    public Order(int id, DateTime dateTime, bool isDelivered)
+    public Order(int id, DateTime dateTime, bool isDelivered, 
+        Customer? customer = null, 
+        AbstractPayment? payment = null, 
+        Review? review = null)
     {
         Id = id;
         DateAndTime = dateTime;
         IsDelivered = isDelivered;
         
         AddInstance(this);
+        if (payment != null)
+            AddPayment(payment);
+        if (review != null)
+            SetReview(review);
+        if (customer != null)
+            SetCustomer(customer);
     }
     
     public Order(){}
@@ -134,5 +143,46 @@ public class Order : ClassExtent<Order>
     internal void RemoveMenuItemAssociationInternal(AbstractMenuItemOrderAssociation association)
     {
         _menuItemAssociations.Remove(association);
+    }
+
+    public void SetReview(Review review)
+    {
+        ArgumentNullException.ThrowIfNull(review);
+
+        if (review == Review) return;
+        
+        if (review.Order != null && review.Order != this)
+        {
+            throw new InvalidOperationException("Review is already assigned to another Order");
+        }
+
+        review.SetOrder(this);
+    }
+    
+    internal void SetReviewInternal(Review review)
+    {
+        Review = review;
+    }
+
+    public void SetCustomer(Customer customer)
+    {
+        ArgumentNullException.ThrowIfNull(customer);
+
+        if (customer == Customer) return; // No need to reassign the same Order
+
+        if (Customer != null)
+            throw new InvalidOperationException("Order is already assigned to another Customer");
+
+        if (customer.Orders.Contains(this)) return;
+
+        Customer = customer;
+        customer.AddOrderInternal(this);
+    }
+    
+    protected internal override void RemoveInstance(Order instance)
+    {
+        Payment.RemoveInstance();
+
+        base.RemoveInstance(instance);
     }
 }

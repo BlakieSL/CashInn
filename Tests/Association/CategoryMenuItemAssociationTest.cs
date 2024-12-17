@@ -67,38 +67,14 @@ public class CategoryMenuItemAssociationTest
     public void SetCategory_ShouldSetCategorySuccessfully()
     {
         var newCategory = new Category(2, "Desserts");
-        _menuItem1.SetCategory(newCategory);
-
+        var _menuItemNew = new DefaultItem(11, "Coffee", 2.5, "Hot coffee", "None",
+            true, ServingSize.Small);
+        _menuItemNew.SetCategory(newCategory);
+    
         Assert.Multiple(() =>
         {
-            Assert.That(_menuItem1.Category, Is.EqualTo(newCategory));
-            Assert.That(newCategory.MenuItems, Contains.Item(_menuItem1));
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
-        });
-    }
-
-    [Test]
-    public void SetCategory_WhenAlreadyHasCategory_ShouldUpdateCategorySuccessfully()
-    {
-        var newCategory = new Category(2, "Desserts");
-        _menuItem1.SetCategory(newCategory);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(_menuItem1.Category, Is.EqualTo(newCategory));
-            Assert.That(newCategory.MenuItems, Contains.Item(_menuItem1));
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
-        });
-    }
-
-    [Test]
-    public void RemoveCategory_ShouldRemoveCategorySuccessfully()
-    {
-        _menuItem1.RemoveCategory();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(_category.MenuItems, Does.Not.Contain(_menuItem1));
+            Assert.That(_menuItemNew.Category, Is.EqualTo(newCategory));
+            Assert.That(newCategory.MenuItems, Contains.Item(_menuItemNew));
         });
     }
 }

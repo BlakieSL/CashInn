@@ -54,7 +54,7 @@ public class FlexibleEmpl : AbstractEmployee, IDeliveryEmpl, IWaiterEmpl
         ShiftStart = shiftStart;
         ShiftEnd = shiftEnd;
 
-        SaveEmployee(this);
+        AddInstance();
     }
     
     public override object ToSerializableObject()

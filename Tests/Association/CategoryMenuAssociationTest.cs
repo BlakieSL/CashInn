@@ -18,6 +18,9 @@ namespace Tests.Association
             Branch _branch = new Branch(1, "loc", "contact");
             _category = new Category(1, "Main Dishes");
             _menu = new Menu(1, DateTime.Now, _branch);
+            
+            _menu.AddCategory(new Category(121, "randomName"));
+            _category.AddMenu(new Menu(121, DateTime.Now, _branch));
         }
 
         [Test]
@@ -37,8 +40,10 @@ namespace Tests.Association
         {
             _category.AddMenu(_menu);
             _category.AddMenu(_menu);
+            _category.AddMenu(_menu);
+            _category.AddMenu(_menu);
 
-            Assert.That(_category.Menus, Is.EquivalentTo(new[] { _menu }));
+            Assert.That(_category.Menus.Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -77,8 +82,10 @@ namespace Tests.Association
         {
             _menu.AddCategory(_category);
             _menu.AddCategory(_category);
+            _menu.AddCategory(_category);
+            _menu.AddCategory(_category);
 
-            Assert.That(_menu.Categories, Is.EquivalentTo(new[] { _category }));
+            Assert.That(_menu.Categories.Count(), Is.EqualTo(2));
         }
 
         [Test]

@@ -1,5 +1,4 @@
 ﻿using CashInn.Helper;
-using CashInn.Model.Employee;
 
 namespace CashInn.Model;
 
@@ -59,12 +58,6 @@ public class Reservation : ClassExtent<Reservation>
 
         Customer = customer;
         customer.AddReservationInternal(this);
-    }
-    
-    public void RemoveCustomer()
-    { 
-       RemoveInstance(this);
-       Customer.RemoveReservationInternal(this);
     }
 
     public void AddTable(Table table, DateTime startTime, DateTime endTime)

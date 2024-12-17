@@ -16,7 +16,7 @@ public class CardPayment : AbstractPayment
     }
 
     private string _cardNumber;
-    public CardPayment(int id, double amount, DateTime dateOfPayment, string cardNumber, Order order) 
+    public CardPayment(int id, double amount, DateTime dateOfPayment, string cardNumber, Order? order = null) 
         : base(id, amount, dateOfPayment, order)
     {
         CardNumber = cardNumber;

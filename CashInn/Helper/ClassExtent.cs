@@ -21,12 +21,12 @@ public abstract class ClassExtent<T> where T : ClassExtent<T>
         if (instance != null!) Instances.Add(instance);
     }
     
-    protected static void RemoveInstance(T instance)
+    protected internal virtual void RemoveInstance(T instance)
     {
         if (instance != null!) Instances.Remove(instance);
     }
     
-    public static void UpdateInstance(T instance)
+    protected static void UpdateInstance(T instance)
     {
         if (instance == null) throw new ArgumentNullException(nameof(instance));
 

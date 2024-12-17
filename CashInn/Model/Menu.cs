@@ -6,7 +6,7 @@ namespace CashInn.Model;
 public class Menu : ClassExtent<Menu>
 {
     protected override string FilePath => ClassExtentFiles.MenusFile;
-    public readonly List<Category> _categories = [];
+    private readonly List<Category> _categories = [];
     public IEnumerable<Category> Categories => _categories.AsReadOnly();
     public Branch Branch { get; private set; }
     public int Id
@@ -32,15 +32,15 @@ public class Menu : ClassExtent<Menu>
             _dateUpdated = value;
         }
     }
-    public Menu(int id, DateTime dateUpdated, Branch branch)
+    public Menu(int id, DateTime dateUpdated, Branch? branch = null)
     {
-        if (branch == null) throw new ArgumentNullException(nameof(branch));
         Id = id;
         DateUpdated = dateUpdated;
 
         AddInstance(this);
         
-        SetBranch(branch);
+        if (branch != null) 
+            SetBranch(branch);
     }
 
     public Menu(){}
@@ -60,6 +60,9 @@ public class Menu : ClassExtent<Menu>
         ArgumentNullException.ThrowIfNull(category);
 
         if(!_categories.Contains(category)) return;
+
+        if (_categories.Count <= 1)
+            throw new InvalidOperationException("Size of Categories cannot be less than 1");
 
         _categories.Remove(category);
         category.RemoveMenuInternal(this);

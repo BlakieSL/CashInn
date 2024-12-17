@@ -40,7 +40,7 @@ public class DeliveryEmpl : AbstractEmployee, IDeliveryEmpl
         Vehicle = vehicle;
         DeliveryArea = deliveryArea;
         
-        SaveEmployee(this);
+        AddInstance();
     }
     
     public override object ToSerializableObject()

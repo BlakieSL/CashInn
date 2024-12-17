@@ -65,7 +65,7 @@ public class Category : ClassExtent<Category>
             throw new InvalidOperationException("MenuItem is not in this category");
         }
 
-        menuItem.RemoveCategory();
+        _menuItems.Remove(menuItem);
     }
 
     internal void AddMenuItemInternal(AbstractMenuItem menuItem)
@@ -73,12 +73,6 @@ public class Category : ClassExtent<Category>
         if(!_menuItems.Contains(menuItem))
             _menuItems.Add(menuItem);
     }
-
-    internal void RemoveMenuItemInternal(AbstractMenuItem menuItem)
-    {
-            _menuItems.Remove(menuItem);
-    }
-
     public void AddMenu(Menu menu)
     {
         ArgumentNullException.ThrowIfNull(menu);
@@ -94,6 +88,9 @@ public class Category : ClassExtent<Category>
         ArgumentNullException.ThrowIfNull(menu);
 
         if (!_menus.Contains(menu)) return;
+        
+        if (_menus.Count <= 1)
+            throw new InvalidOperationException("Size of Menus cannot be less than 1");
 
         _menus.Remove(menu);
         menu.RemoveCategoryInternal(this);

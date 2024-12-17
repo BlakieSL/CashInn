@@ -8,7 +8,7 @@ namespace CashInn.Model.Payment;
 
 public abstract class AbstractPayment
 {
-    private static readonly List<AbstractPayment> Payments = [];
+    private static readonly List<AbstractPayment> Instances = [];
     private static string _filepath = ClassExtentFiles.PaymentsFile;
     public Order Order { get; private set; }
 
@@ -49,27 +49,27 @@ public abstract class AbstractPayment
     }
     private DateTime _dateOfPayment;
 
-    protected AbstractPayment(int id, double amount, DateTime dateOfPayment, Order order)
+    public AbstractPayment(int id, double amount, DateTime dateOfPayment, Order? order = null)
     {
-        if (order == null) throw new ArgumentNullException(nameof(order));
-        
-        SetOrder(order);
-        
         Id = id;
         Amount = amount;
         DateOfPayment = dateOfPayment;
+        if (order != null) 
+            SetOrder(order);
+        
+        AddInstance();
     }
     
     public abstract object ToSerializableObject();
     public static void SaveExtent()
     {
-        Saver.Serialize(Payments.Select(e => e.ToSerializableObject()).ToList(), _filepath);
+        Saver.Serialize(Instances.Select(e => e.ToSerializableObject()).ToList(), _filepath);
     }
     
     public static void LoadExtent()
     {
         var deserializedEmployees = Saver.Deserialize<List<dynamic>>(_filepath);
-        Payments.Clear();
+        Instances.Clear();
 
         if (deserializedEmployees == null) return;
 
@@ -94,24 +94,24 @@ public abstract class AbstractPayment
             AbstractPayment abstractPayment;
             if (itemType == "Cash")
             {
-                abstractPayment = new CashPayment(
-                    id,
-                    amount,
-                    paymentData.GetProperty("CashReceived").GetDouble(),
-                    paymentData.GetProperty("ChangeGiven").GetDouble(),
-                    dateOfPayment.Value,
-                    deserOrder
-                );
+                // abstractPayment = new CashPayment(
+                //     id,
+                //     amount,
+                //     paymentData.GetProperty("CashReceived").GetDouble(),
+                //     paymentData.GetProperty("ChangeGiven").GetDouble(),
+                //     dateOfPayment.Value,
+                //     deserOrder
+                // );
             }
             else if (itemType == "Card")
             {
-                abstractPayment = new CardPayment(
-                    id,
-                    amount,
-                    dateOfPayment.Value,
-                    paymentData.GetProperty("CardNumber").GetString(),
-                    deserOrder
-                );
+                // abstractPayment = new CardPayment(
+                //     id,
+                //     amount,
+                //     dateOfPayment.Value,
+                //     paymentData.GetProperty("CardNumber").GetString(),
+                //     deserOrder
+                // );
             } 
             else
             {
@@ -123,12 +123,12 @@ public abstract class AbstractPayment
     public static void SavePayment(AbstractPayment abstractMenuItem)
     {
         ArgumentNullException.ThrowIfNull(abstractMenuItem);
-        Payments.Add(abstractMenuItem);
+        Instances.Add(abstractMenuItem);
     }
     
     public static ICollection<AbstractPayment> GetAll()
     {
-        return Payments.ToImmutableList();
+        return Instances.ToImmutableList();
     }
 
     public void SetOrder(Order order)
@@ -144,5 +144,15 @@ public abstract class AbstractPayment
 
         Order = order;
         order.AddPaymentInternal(this);
+    }
+    
+    internal void AddInstance()
+    {
+        Instances.Add(this);
+    }
+    
+    internal void RemoveInstance()
+    {
+        Instances.Remove(this);
     }
 }

@@ -7,8 +7,8 @@ namespace CashInn.Model;
 public class Review : ClassExtent<Review>
 {
     protected override string FilePath => ClassExtentFiles.ReviewsFile;
-
     public Customer Customer { get; private set; }
+    public Order Order { get; private set; }
     public int Id
     {
         get => _id;
@@ -34,14 +34,17 @@ public class Review : ClassExtent<Review>
     }
     private string _description;
 
-    public Review(int id, Rating rating, string description, Customer customer)
+    public Review(int id, Rating rating, string description, Customer? customer = null, Order? order = null)
     {
         Id = id;
         ReviewRating = rating;
         Description = description;
-        SetCustomer(customer);
 
         AddInstance(this);
+        if (customer != null)
+            SetCustomer(customer);
+        if (order != null)
+            SetOrder(order);
     }
     
     public Review(){}
@@ -49,17 +52,31 @@ public class Review : ClassExtent<Review>
     public void SetCustomer(Customer customer)
     {
         ArgumentNullException.ThrowIfNull(customer);
+        
         if (Customer == customer) return;
 
-        Customer?.RemoveReviewInternal(this);
+        if (Customer != null)
+            throw new InvalidOperationException("Review is already assigned to a Customer");
 
+        if (customer.Reviews.Contains(this)) return;
+        
         Customer = customer;
         customer.AddReviewInternal(this);
     }
 
-    public void RemoveCustomer()
+    public void SetOrder(Order order)
     {
-        Customer.RemoveReviewInternal(this);
-    }
+        ArgumentNullException.ThrowIfNull(order);
 
+        if (order == Order) return;
+
+        if (Order != null)
+            throw new InvalidOperationException("Review is already assigned to another Order");
+
+        if (order.Review != null)
+            throw new InvalidOperationException("Order already has another Review");
+
+        Order = order;
+        order.SetReviewInternal(this);
+    }
 }

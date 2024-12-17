@@ -216,4 +216,21 @@ public class Branch : ClassExtent<Branch>
     {
         return Id.GetHashCode();
     }
+    
+    protected internal override void RemoveInstance(Branch instance)
+    {
+        foreach (var table in Tables.Values)
+        {
+            table.RemoveInstance(table);
+        }
+        
+        Menu.RemoveInstance(Menu);
+        
+        foreach (var employee in Employees)
+        {
+            employee.RemoveInstance();
+        }
+
+        base.RemoveInstance(instance);
+    }
 }

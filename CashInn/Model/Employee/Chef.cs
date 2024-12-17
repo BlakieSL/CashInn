@@ -63,7 +63,7 @@ public class Chef : AbstractEmployee, IKitchenEmpl
             ManagedKitchen = kitchen;
         }
         
-        SaveEmployee(this);
+        AddInstance();
     }
 
     public override object ToSerializableObject()
