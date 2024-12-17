@@ -1,14 +1,20 @@
 ﻿using CashInn.Helper;
 using CashInn.Model.Employee;
+using CashInn.Model.MenuItem;
 using CashInn.Model.Payment;
 
 namespace CashInn.Model;
 
 public class Order : ClassExtent<Order>
 {
+    protected override string FilePath => ClassExtentFiles.OrdersFile;
+
+    private readonly List<AbstractMenuItemOrderAssociation> _menuItemAssociations = [];
+    public IEnumerable<AbstractMenuItemOrderAssociation> MenuItemAssociations => _menuItemAssociations.AsReadOnly();
+    
     public DeliveryEmpl? DeliveryEmpl { get; private set; }
     public AbstractPayment Payment { get; private set; }
-    protected override string FilePath => ClassExtentFiles.OrdersFile;
+
     public int Id
     {
         get => _id;
@@ -97,5 +103,36 @@ public class Order : ClassExtent<Order>
         Payment = payment;
 
         UpdateInstance(this);
+    }
+
+    public void AddMenuItem(AbstractMenuItem menuItem, int quantity)
+    {
+        ArgumentNullException.ThrowIfNull(menuItem);
+
+        var association = new AbstractMenuItemOrderAssociation(menuItem, this, quantity);
+        _menuItemAssociations.Add(association);
+        menuItem.AddOrderAssociationInternal(association);
+    }
+
+    public void RemoveMenuItem(AbstractMenuItem menuItem)
+    {
+        ArgumentNullException.ThrowIfNull(menuItem);
+        
+        var association = _menuItemAssociations.FirstOrDefault(a => a.menuItem == menuItem);
+        if (association == null) return;
+
+        _menuItemAssociations.Remove(association);
+        menuItem.RemoveOrderAssociationInternal(association);
+    }
+
+    internal void AddMenuItemAssociationInternal(AbstractMenuItemOrderAssociation association)
+    {
+        if(!_menuItemAssociations.Contains(association))
+            _menuItemAssociations.Add(association);
+    }
+
+    internal void RemoveMenuItemAssociationInternal(AbstractMenuItemOrderAssociation association)
+    {
+        _menuItemAssociations.Remove(association);
     }
 }

@@ -11,11 +11,16 @@ public abstract class AbstractMenuItem
 
     private readonly List<AbstractMenuItem> _relatedItems = [];
     public IEnumerable<AbstractMenuItem> RelatedItems => _relatedItems.AsReadOnly();
+    
     private readonly List<AbstractMenuItem> _referencingItems = [];
     public IEnumerable<AbstractMenuItem> ReferencingItems => _referencingItems.AsReadOnly();
-
+    
     private readonly List<Ingredient> _ingredients = [];
     public IEnumerable<Ingredient> Ingredients => _ingredients.AsReadOnly();
+    
+    private readonly List<AbstractMenuItemOrderAssociation> _orderAssociations = [];
+    public IEnumerable<AbstractMenuItemOrderAssociation> OrderAssociations => _orderAssociations.AsReadOnly();
+    
     public Category Category { get; private set; }
     public abstract string ItemType { get; }
     public int Id 
@@ -317,5 +322,36 @@ public abstract class AbstractMenuItem
     internal void RemoveReferencingItemInternal(AbstractMenuItem referencingItem)
     {
         _referencingItems.Remove(referencingItem);
+    }
+
+    public void AddOrder(Order order, int quantity)
+    {
+        ArgumentNullException.ThrowIfNull(order);
+
+        var association = new AbstractMenuItemOrderAssociation(this, order, quantity);
+        _orderAssociations.Add(association);
+        order.AddMenuItemAssociationInternal(association);
+    }
+
+    public void RemoveOrder(Order order)
+    {
+        ArgumentNullException.ThrowIfNull(order); 
+        
+        var association = _orderAssociations.FirstOrDefault(a => a.order == order);
+        if (association == null) return;
+
+        _orderAssociations.Remove(association);
+        order.RemoveMenuItemAssociationInternal(association);
+    }
+
+    internal void AddOrderAssociationInternal(AbstractMenuItemOrderAssociation association)
+    {
+        if(!_orderAssociations.Contains(association))
+            _orderAssociations.Add(association);
+    }
+
+    internal void RemoveOrderAssociationInternal(AbstractMenuItemOrderAssociation association)
+    {
+        _orderAssociations.Remove(association);
     }
 }
