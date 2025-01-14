@@ -6,13 +6,12 @@ using CashInn.Model.MenuItem;
 
 namespace CashInn.Model.Payment;
 
-public abstract class AbstractPayment
+public class AbstractPayment
 {
     private static readonly List<AbstractPayment> Instances = [];
     private static string _filepath = ClassExtentFiles.PaymentsFile;
     public Order Order { get; private set; }
 
-    public abstract string PaymentType { get; }
     public int Id 
     {
         get => _id;
@@ -49,18 +48,30 @@ public abstract class AbstractPayment
     }
     private DateTime _dateOfPayment;
 
-    public AbstractPayment(int id, double amount, DateTime dateOfPayment, Order? order = null)
+    private IPaymentRole _role;
+
+    public AbstractPayment(int id, double amount, DateTime dateOfPayment, IPaymentRole role, Order? order = null)
     {
         Id = id;
         Amount = amount;
         DateOfPayment = dateOfPayment;
+        _role = role;
         if (order != null) 
             SetOrder(order);
         
         AddInstance();
     }
-    
+
+    public void ChangeRole(IPaymentRole newRole)
+    {
+        _role = newRole;
+    }
+
+    public object RoleDetails => _role.GetDetails();
+
+/*
     public abstract object ToSerializableObject();
+
     public static void SaveExtent()
     {
         Saver.Serialize(Instances.Select(e => e.ToSerializableObject()).ToList(), _filepath);
@@ -119,7 +130,8 @@ public abstract class AbstractPayment
             }
         }
     }
-    
+*/
+
     public static void SavePayment(AbstractPayment abstractMenuItem)
     {
         ArgumentNullException.ThrowIfNull(abstractMenuItem);

@@ -1,9 +1,8 @@
 ﻿namespace CashInn.Model.Payment;
 
 [Serializable]
-public class CardPayment : AbstractPayment
+public class CardPayment : IPaymentRole
 {
-    public override string PaymentType => "Card";
     public string CardNumber
     {
         get => _cardNumber;
@@ -14,25 +13,17 @@ public class CardPayment : AbstractPayment
             _cardNumber = value;
         }
     }
-
     private string _cardNumber;
-    public CardPayment(int id, double amount, DateTime dateOfPayment, string cardNumber, Order? order = null) 
-        : base(id, amount, dateOfPayment, order)
+
+    public string PaymentType => "Card";
+
+    public CardPayment(string cardNumber)
     {
         CardNumber = cardNumber;
-        
-        SavePayment(this);
     }
 
-    public override object ToSerializableObject()
+    public object GetDetails()
     {
-        return new
-        {
-            Id,
-            Amount,
-            CardNumber,
-            DateOfPayment,
-            PaymentType
-        };
+        return new { CardNumber };
     }
 }

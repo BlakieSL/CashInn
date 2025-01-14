@@ -1,81 +1,66 @@
 ﻿using CashInn.Enum;
 using CashInn.Model.FlexibleEmplSetup;
 
-namespace CashInn.Model.Employee;
-
-public class FlexibleEmpl : AbstractEmployee, IDeliveryEmpl, IWaiterEmpl
+namespace CashInn.Model.Employee
 {
-    public override string EmployeeType => "FlexibleEmpl";
-
-    private string _vehicle;
-    public string Vehicle
+    public class FlexibleEmpl : DeliveryEmpl, IWaiterEmpl
     {
-        get => _vehicle;
-        set
+        private readonly List<Table> _assignedTables = new();
+        public IEnumerable<Table> AssignedTables => _assignedTables.AsReadOnly();
+
+        private double _tipsEarned;
+        public double TipsEarned
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Vehicle cannot be null or empty", nameof(Vehicle));
-            _vehicle = value;
+            get => _tipsEarned;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Tips earned cannot be negative", nameof(TipsEarned));
+                _tipsEarned = value;
+            }
         }
-    }
 
-    private string _deliveryArea;
-    public string DeliveryArea
-    {
-        get => _deliveryArea;
-        set
+        public override string EmployeeType => "FlexibleEmpl";
+
+        public FlexibleEmpl(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
+            StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea, double tipsEarned, Branch employerBranch,
+            Branch? managedBranch = null, DateTime? layoffDate = null)
+            : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, vehicle, deliveryArea, employerBranch, managedBranch, layoffDate)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Delivery area cannot be null or empty", nameof(DeliveryArea));
-            _deliveryArea = value;
+            TipsEarned = tipsEarned;
         }
-    }
 
-    private double _tipsEarned;
-    public double TipsEarned
-    {
-        get => _tipsEarned;
-        set
+        public override object ToSerializableObject()
         {
-            if (value < 0)
-                throw new ArgumentException("Tips earned cannot be negative", nameof(TipsEarned));
-            _tipsEarned = value;
+            return new
+            {
+                Id,
+                Name,
+                Salary,
+                HireDate,
+                ShiftStart,
+                ShiftEnd,
+                Status,
+                IsBranchManager,
+                LayoffDate,
+                Vehicle,
+                DeliveryArea,
+                TipsEarned,
+                EmployeeType
+            };
         }
-    }
-    private static int BonusPercentage = 15;
-    public FlexibleEmpl(int id, string name, double salary, DateTime hireDate, DateTime shiftStart, DateTime shiftEnd,
-        StatusEmpl status, bool isBranchManager, string vehicle, string deliveryArea, double tipsEarned, Branch employerBranch,
-        Branch? managedBranch = null, DateTime? layoffDate = null)
-        : base(id, name, salary, hireDate, shiftStart, shiftEnd, status, isBranchManager, employerBranch, managedBranch, layoffDate)
-    {
-        Vehicle = vehicle;
-        DeliveryArea = deliveryArea;
-        TipsEarned = tipsEarned;
-        ShiftStart = shiftStart;
-        ShiftEnd = shiftEnd;
 
-        AddInstance();
-    }
-    
-    public override object ToSerializableObject()
-    {
-        return new
+        public void AddTableInternal(Table table)
         {
-            Id,
-            Name,
-            Salary,
-            HireDate,
-            ShiftStart,
-            ShiftEnd,
-            Status,
-            IsBranchManager,
-            LayoffDate,
-            Vehicle,
-            DeliveryArea,
-            TipsEarned,
-            EmployeeType,
-            // EmployerBranch,
-            // ManagedBranch
-        };
+            if (!_assignedTables.Contains(table))
+            {
+                _assignedTables.Add(table);
+            }
+        }
+
+        public void RemoveTableInternal(Table table)
+        {
+            _assignedTables.Remove(table);
+        }
     }
 }

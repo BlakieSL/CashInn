@@ -1,9 +1,8 @@
 ﻿using CashInn.Enum;
-using CashInn.Model.FlexibleEmplSetup;
 
 namespace CashInn.Model.Employee;
 
-public class DeliveryEmpl : AbstractEmployee, IDeliveryEmpl
+public class DeliveryEmpl : AbstractEmployee
 {
     private readonly List<Order> _assignedOrders = [];
     public IEnumerable<Order> AssignedOrders => _assignedOrders.AsReadOnly();

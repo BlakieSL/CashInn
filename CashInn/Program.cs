@@ -137,6 +137,7 @@ app.MapGet("/branches", () =>
     return branches;
 });
 
+/*
 app.MapGet("/payments", () =>
 {
     if (AbstractPayment.GetAll().Count == 0)
@@ -148,6 +149,7 @@ app.MapGet("/payments", () =>
     return result;
 });
 
+*/
 app.MapGet("/categories", () =>
 {
     if (Category.GetAll().Count == 0)

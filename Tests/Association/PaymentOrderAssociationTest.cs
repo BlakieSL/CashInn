@@ -14,7 +14,7 @@ namespace Tests.Association
         public void SetUp()
         {
             _order = new Order(1, DateTime.Today, false);
-            _payment = new CardPayment(101, 50.0, DateTime.Today, "number");
+            _payment = new AbstractPayment(101, 50.0, DateTime.Today, new CardPayment("4441 1131..."));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Tests.Association
         public void SetUp()
         {
             _order = new Order(1, DateTime.Today, false);
-            _payment = new CardPayment(101, 50.0, DateTime.Today, "number");
+            _payment = new AbstractPayment(101, 50.0, DateTime.Today, new CardPayment("4441 1131"));
         }
 
         [Test]

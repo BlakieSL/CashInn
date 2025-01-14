@@ -1,10 +1,8 @@
 ﻿namespace CashInn.Model.Payment;
 
 [Serializable]
-public class CashPayment : AbstractPayment
+public class CashPayment : IPaymentRole
 {
-    public override string PaymentType => "Cash";
-
     public double CashReceived
     {
         get => _cashReceived;
@@ -28,25 +26,10 @@ public class CashPayment : AbstractPayment
         }
     }
     private double? _changeGiven;
-    public CashPayment(int id, double amount, double cashReceived, double changeGiven, DateTime dateOfPayment, Order? order = null) 
-        : base(id, amount, dateOfPayment, order)
+
+    public string PaymentType => "Cash";
+    public object GetDetails()
     {
-        CashReceived = cashReceived;
-        ChangeGiven = changeGiven;
-        
-        SavePayment(this);
-    }
-    
-    public override object ToSerializableObject()
-    {
-        return new
-        {
-            Id,
-            Amount,
-            CashReceived,
-            ChangeGiven,
-            DateOfPayment,
-            PaymentType
-        };
+        return new { CashReceived, ChangeGiven };
     }
 }

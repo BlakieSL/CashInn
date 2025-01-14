@@ -1,5 +1,6 @@
 ﻿using CashInn.Helper;
 using CashInn.Model.Employee;
+using CashInn.Model.FlexibleEmplSetup;
 
 namespace CashInn.Model;
 
@@ -9,10 +10,10 @@ public class Table : ClassExtent<Table>
 
     private readonly List<TableReservationAssociation> _reservationAssociations = [];
     public IEnumerable<TableReservationAssociation> ReservationAssociations => _reservationAssociations.AsReadOnly();
-    
-    public Waiter? Waiter { get; private set; }
+
+    public IWaiterEmpl? Waiter { get; private set; }
     public Branch Branch { get; private set; }
-    public int TableNumber 
+    public int TableNumber
     {
         get => _tableNumber;
         set
@@ -35,20 +36,20 @@ public class Table : ClassExtent<Table>
             _capacity = value;
         }
     }
-    
+
     public Table(int tableNumber, int capacity, Branch branch)
     {
         if (branch == null) throw new ArgumentNullException(nameof(branch));
         TableNumber = tableNumber;
         Capacity = capacity;
         AddInstance(this);
-        
+
         SetBranch(branch);
     }
-    
+
     public Table(){}
-    
-    public void AddWaiter(Waiter waiter)
+
+    public void AddWaiter(IWaiterEmpl waiter)
     {
         ArgumentNullException.ThrowIfNull(waiter);
 
@@ -72,14 +73,14 @@ public class Table : ClassExtent<Table>
         currentWaiter.RemoveTableInternal(this);
     }
 
-    public void UpdateWaiter(Waiter newWaiter)
+    public void UpdateWaiter(IWaiterEmpl newWaiter)
     {
         ArgumentNullException.ThrowIfNull(newWaiter);
 
         RemoveWaiter();
         AddWaiter(newWaiter);
     }
-    
+
     public void SetBranch(Branch branch)
     {
         ArgumentNullException.ThrowIfNull(branch);
@@ -90,12 +91,12 @@ public class Table : ClassExtent<Table>
         {
             throw new InvalidOperationException("Table is already assigned to another Waiter.");
         }
-        
+
         Branch = branch;
-        
+
         Branch.AddTableInternal(this);
     }
-    
+
     public void RemoveBranch()
     {
         RemoveInstance(this);
@@ -124,7 +125,7 @@ public class Table : ClassExtent<Table>
 
     internal void AddReservationAssociationInternal(TableReservationAssociation association)
     {
-        if(!_reservationAssociations.Contains(association)) 
+        if(!_reservationAssociations.Contains(association))
             _reservationAssociations.Add(association);
     }
 
