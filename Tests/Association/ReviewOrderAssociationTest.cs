@@ -12,7 +12,7 @@ namespace Tests.Association
         private Review _review = null!;
         private Order _order = null!;
         private Customer _customer = null!;
-        private AbstractPayment _payment = null!;
+        private Payment _payment = null!;
 
         [SetUp]
         public void SetUp()

@@ -6,9 +6,9 @@ using CashInn.Model.MenuItem;
 
 namespace CashInn.Model.Payment;
 
-public class AbstractPayment
+public class Payment
 {
-    private static readonly List<AbstractPayment> Instances = [];
+    private static readonly List<Payment> Instances = [];
     private static string _filepath = ClassExtentFiles.PaymentsFile;
     public Order Order { get; private set; }
 
@@ -50,7 +50,7 @@ public class AbstractPayment
 
     private IPaymentRole _role;
 
-    public AbstractPayment(int id, double amount, DateTime dateOfPayment, IPaymentRole role, Order? order = null)
+    public Payment(int id, double amount, DateTime dateOfPayment, IPaymentRole role, Order? order = null)
     {
         Id = id;
         Amount = amount;
@@ -132,13 +132,13 @@ public class AbstractPayment
     }
 */
 
-    public static void SavePayment(AbstractPayment abstractMenuItem)
+    public static void SavePayment(Payment menuItem)
     {
-        ArgumentNullException.ThrowIfNull(abstractMenuItem);
-        Instances.Add(abstractMenuItem);
+        ArgumentNullException.ThrowIfNull(menuItem);
+        Instances.Add(menuItem);
     }
     
-    public static ICollection<AbstractPayment> GetAll()
+    public static ICollection<Payment> GetAll()
     {
         return Instances.ToImmutableList();
     }

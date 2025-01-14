@@ -11,7 +11,7 @@ public class CustomerReviewAssociationTest
 {
     private Customer _customer = null!;
     private Order _order = null!;
-    private AbstractPayment _payment = null!;
+    private Payment _payment = null!;
     private Review _review1 = null!;
 
     [SetUp]

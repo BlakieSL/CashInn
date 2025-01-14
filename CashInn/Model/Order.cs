@@ -13,7 +13,7 @@ public class Order : ClassExtent<Order>
     public IEnumerable<AbstractMenuItemOrderAssociation> MenuItemAssociations => _menuItemAssociations.AsReadOnly();
     public Customer Customer { get; private set; }
     public DeliveryEmpl? DeliveryEmpl { get; private set; }
-    public AbstractPayment Payment { get; private set; }
+    public Payment.Payment Payment { get; private set; }
     public Review? Review { get; private set; }
 
     public int Id
@@ -45,7 +45,7 @@ public class Order : ClassExtent<Order>
 
     public Order(int id, DateTime dateTime, bool isDelivered, 
         Customer? customer = null, 
-        AbstractPayment? payment = null, 
+        Payment.Payment? payment = null, 
         Review? review = null)
     {
         Id = id;
@@ -95,7 +95,7 @@ public class Order : ClassExtent<Order>
         AddDeliveryEmployee(newDelivery);
     }
     
-    public void AddPayment(AbstractPayment payment)
+    public void AddPayment(Payment.Payment payment)
     {
         ArgumentNullException.ThrowIfNull(payment);
 
@@ -107,7 +107,7 @@ public class Order : ClassExtent<Order>
         payment.SetOrder(this);
     }
 
-    internal void AddPaymentInternal(AbstractPayment payment)
+    internal void AddPaymentInternal(Payment.Payment payment)
     {
         Payment = payment;
 

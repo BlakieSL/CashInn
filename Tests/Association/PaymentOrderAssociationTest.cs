@@ -8,13 +8,13 @@ namespace Tests.Association
     public class OrderPaymentAssociationTest
     {
         private Order _order = null!;
-        private AbstractPayment _payment = null!;
+        private Payment _payment = null!;
 
         [SetUp]
         public void SetUp()
         {
             _order = new Order(1, DateTime.Today, false);
-            _payment = new AbstractPayment(101, 50.0, DateTime.Today, new CardPayment("4441 1131..."));
+            _payment = new Payment(101, 50.0, DateTime.Today, new CardPayment("4441 1131..."));
         }
 
         [Test]
@@ -40,17 +40,17 @@ namespace Tests.Association
     }
 
     [TestFixture]
-    [TestOf(typeof(AbstractPayment))]
+    [TestOf(typeof(Payment))]
     public class PaymentOrderAssociationTest
     {
         private Order _order = null!;
-        private AbstractPayment _payment = null!;
+        private Payment _payment = null!;
 
         [SetUp]
         public void SetUp()
         {
             _order = new Order(1, DateTime.Today, false);
-            _payment = new AbstractPayment(101, 50.0, DateTime.Today, new CardPayment("4441 1131"));
+            _payment = new Payment(101, 50.0, DateTime.Today, new CardPayment("4441 1131"));
         }
 
         [Test]

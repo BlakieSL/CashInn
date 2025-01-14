@@ -7,7 +7,6 @@ namespace CashInn.Model.Employee
     {
         private readonly List<Table> _assignedTables = new();
         public IEnumerable<Table> AssignedTables => _assignedTables.AsReadOnly();
-
         public override string EmployeeType => "Waiter";
 
         private double _tipsEarned;
